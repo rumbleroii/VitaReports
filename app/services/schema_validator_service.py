@@ -46,8 +46,13 @@ class SchemaValidatorService:
         missing_required = check(report)
         field_details = self._build_field_details(report, confidences)
 
-        matched = sum(1 for d in field_details if d.status == "matched")
-        total = len(field_details) or 1
+        # Score only fields the extractor actually found in the document
+        # (confidence > 0). Empty optional schema fields no longer dilute match %.
+        scored = [d for d in field_details if (d.confidence or 0) > 0]
+        if not scored:
+            scored = field_details
+        matched = sum(1 for d in scored if d.status == "matched")
+        total = len(scored) or 1
         match_rate = matched / total
         match_percent = int(round(match_rate * 100))
 

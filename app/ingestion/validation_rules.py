@@ -8,7 +8,7 @@ from pydantic import BaseModel
 
 from app.schemas.reports_common import KidneyFinding, QuantitativeValue
 
-MATCH_THRESHOLD = 0.90
+MATCH_THRESHOLD = 0.85
 FIELD_CONFIDENCE_MIN = 0.70
 
 ReportType = str

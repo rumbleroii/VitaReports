@@ -54,4 +54,4 @@ uvicorn app.main:app --reload
 - `patient_id`, `report_type` (`cbc` | `echo` | `chest_radiology` | `renal_ultrasound`)
 - `files`: one or more PDFs and/or images (png/jpg/jpeg/webp/tif/tiff)
 
-Per file: required fields hard-fail; otherwise accept only if field match ≥ 90%. Rejected files do not fail the whole batch.
+Per file: required fields hard-fail; otherwise accept only if field match ≥ 85% (scored against fields found in the document). Rejected files do not fail the whole batch.

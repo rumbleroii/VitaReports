@@ -1,9 +1,19 @@
-"""Response shapes for patient health-snapshot APIs (logic filled later)."""
+"""Response shapes for patient health-snapshot APIs."""
 
 from datetime import datetime
 from typing import Any, Literal
 
 from pydantic import BaseModel, Field
+
+
+class AnomalyItem(BaseModel):
+    code: str
+    severity: Literal["critical", "high", "medium", "low"]
+    message: str
+    metric: str | None = None
+    observed_value: str | None = None
+    expected: str | None = None
+    source_ref: str | None = None
 
 
 class RecentVitalItem(BaseModel):
@@ -14,11 +24,13 @@ class RecentVitalItem(BaseModel):
     source_id: str | None = None
     context: str | None = None
     notes: str | None = None
+    anomalies: list[AnomalyItem] = Field(default_factory=list)
 
 
 class RecentVitalsOut(BaseModel):
     patient_id: str
     vitals: list[RecentVitalItem] = Field(default_factory=list)
+    anomalies: list[AnomalyItem] = Field(default_factory=list)
 
 
 class MedicationDoseStatus(BaseModel):
@@ -30,6 +42,7 @@ class MedicationDoseStatus(BaseModel):
     adherence: Literal["unknown", "on_track", "missed", "partial"] = "unknown"
     last_taken_at: datetime | None = None
     notes: str | None = None
+    anomalies: list[AnomalyItem] = Field(default_factory=list)
 
 
 class MedicationAdherenceOut(BaseModel):
@@ -38,6 +51,7 @@ class MedicationAdherenceOut(BaseModel):
     as_of: datetime | None = None
     overall_status: Literal["unknown", "on_track", "missed", "partial"] = "unknown"
     medications: list[MedicationDoseStatus] = Field(default_factory=list)
+    anomalies: list[AnomalyItem] = Field(default_factory=list)
 
 
 class ReportedSymptom(BaseModel):
@@ -62,11 +76,13 @@ class HospitalFinding(BaseModel):
     observed_at: datetime | None = None
     report_id: str | None = None
     details: dict[str, Any] = Field(default_factory=dict)
+    anomalies: list[AnomalyItem] = Field(default_factory=list)
 
 
 class HospitalFindingsOut(BaseModel):
     patient_id: str
     findings: list[HospitalFinding] = Field(default_factory=list)
+    anomalies: list[AnomalyItem] = Field(default_factory=list)
 
 
 class CareAttentionItem(BaseModel):
@@ -81,3 +97,14 @@ class CareAttentionOut(BaseModel):
     patient_id: str
     as_of: datetime | None = None
     items: list[CareAttentionItem] = Field(default_factory=list)
+
+
+class HealthSnapshotOut(BaseModel):
+    patient_id: str
+    as_of: datetime
+    window_hours: int = 48
+    recent_vitals: RecentVitalsOut
+    medication_adherence: MedicationAdherenceOut
+    symptoms: SymptomsOut
+    hospital_findings: HospitalFindingsOut
+    care_attention: CareAttentionOut

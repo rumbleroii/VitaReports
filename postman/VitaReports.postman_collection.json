@@ -1,0 +1,663 @@
+{
+  "info": {
+    "_postman_id": "ab81a2b0-809b-4e28-bc64-7541c934b6d9",
+    "name": "VitaReports",
+    "description": "All VitaReports APIs. Suggested order: create-profile \u2192 update-manual-entry \u2192 extract-lab-reports / ingest-wearable-export \u2192 GET profile \u2192 health-snapshot GETs. Select Local env (baseUrl, patientId). For multipart requests, attach files from reassignmentcheckin/.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Root",
+      "item": [
+        {
+          "name": "GET /",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [],
+              "query": []
+            },
+            "description": "Root ping"
+          },
+          "response": []
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET /health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ],
+              "query": []
+            },
+            "description": "Liveness check"
+          },
+          "response": []
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "Profile",
+      "item": [
+        {
+          "name": "POST /create-profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/create-profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "create-profile"
+              ],
+              "query": []
+            },
+            "description": "Run first. Uses reassignmentcheckin/patient_profile.json (VTR-00471).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"VTR-00471\",\n  \"demographics\": {\n    \"name\": \"Sara Ahmed Shalabi\",\n    \"date_of_birth\": \"1971-03-14\",\n    \"gender\": \"Female\",\n    \"blood_type\": \"A+\",\n    \"height_cm\": 162,\n    \"weight_kg\": 78.4,\n    \"bmi\": 29.9,\n    \"national_id\": \"REDACTED\",\n    \"city\": \"Jeddah\",\n    \"emergency_contact\": {\n      \"name\": \"Khalid Shalabi\",\n      \"relation\": \"Son\",\n      \"phone\": \"+966-5X-XXX-XXXX\"\n    }\n  },\n  \"conditions\": [\n    {\n      \"icd10\": \"I10\",\n      \"name\": \"Essential Hypertension\",\n      \"diagnosed\": \"2016-08-22\",\n      \"status\": \"active\",\n      \"severity\": \"Stage 2\",\n      \"managing_facility\": \"King Abdulaziz University Hospital\"\n    },\n    {\n      \"icd10\": \"E11.65\",\n      \"name\": \"Type 2 Diabetes Mellitus with Hyperglycemia\",\n      \"diagnosed\": \"2019-01-10\",\n      \"status\": \"active\",\n      \"severity\": \"moderate\",\n      \"managing_facility\": \"Saudi German Hospital\"\n    },\n    {\n      \"icd10\": \"J45.30\",\n      \"name\": \"Mild Persistent Asthma\",\n      \"diagnosed\": \"2005-06-01\",\n      \"status\": \"active\",\n      \"severity\": \"mild\",\n      \"managing_facility\": \"Dr. Soliman Fakeeh Hospital\"\n    }\n  ],\n  \"medications\": [\n    {\n      \"name\": \"Amlodipine\",\n      \"dose\": \"10mg\",\n      \"frequency\": \"once daily\",\n      \"scheduled_time\": \"08:00\",\n      \"indication\": \"Hypertension\",\n      \"prescriber\": \"Dr. Faisal Al-Ghamdi\",\n      \"start_date\": \"2023-05-15\"\n    },\n    {\n      \"name\": \"Losartan\",\n      \"dose\": \"100mg\",\n      \"frequency\": \"once daily\",\n      \"scheduled_time\": \"08:00\",\n      \"indication\": \"Hypertension\",\n      \"prescriber\": \"Dr. Faisal Al-Ghamdi\",\n      \"start_date\": \"2021-11-03\"\n    },\n    {\n      \"name\": \"Metformin\",\n      \"dose\": \"1000mg\",\n      \"frequency\": \"twice daily\",\n      \"scheduled_time\": \"08:00, 20:00\",\n      \"indication\": \"Diabetes\",\n      \"prescriber\": \"Dr. Noura Al-Harbi\",\n      \"start_date\": \"2019-02-20\"\n    },\n    {\n      \"name\": \"Atorvastatin\",\n      \"dose\": \"20mg\",\n      \"frequency\": \"once daily\",\n      \"scheduled_time\": \"22:00\",\n      \"indication\": \"Dyslipidemia\",\n      \"prescriber\": \"Dr. Noura Al-Harbi\",\n      \"start_date\": \"2022-09-01\"\n    },\n    {\n      \"name\": \"Salbutamol Inhaler\",\n      \"dose\": \"100mcg/puff\",\n      \"frequency\": \"as needed\",\n      \"scheduled_time\": null,\n      \"indication\": \"Asthma\",\n      \"prescriber\": \"Dr. Amira Batarfi\",\n      \"start_date\": \"2005-06-15\"\n    }\n  ],\n  \"allergies\": [\n    {\n      \"substance\": \"Penicillin\",\n      \"reaction\": \"Urticaria\",\n      \"severity\": \"moderate\"\n    },\n    {\n      \"substance\": \"NSAIDs\",\n      \"reaction\": \"Bronchospasm\",\n      \"severity\": \"severe\",\n      \"note\": \"Linked to asthma exacerbation\"\n    }\n  ],\n  \"care_team\": [\n    {\n      \"name\": \"Dr. Faisal Al-Ghamdi\",\n      \"specialty\": \"Internal Medicine\",\n      \"facility\": \"King Abdulaziz University Hospital\",\n      \"last_visit\": \"2026-02-18\",\n      \"next_appointment\": \"2026-06-10\"\n    },\n    {\n      \"name\": \"Dr. Noura Al-Harbi\",\n      \"specialty\": \"Endocrinology\",\n      \"facility\": \"Saudi German Hospital\",\n      \"last_visit\": \"2026-01-05\",\n      \"next_appointment\": \"2026-04-20\"\n    },\n    {\n      \"name\": \"Dr. Amira Batarfi\",\n      \"specialty\": \"Pulmonology\",\n      \"facility\": \"Dr. Soliman Fakeeh Hospital\",\n      \"last_visit\": \"2025-10-30\",\n      \"next_appointment\": null\n    }\n  ],\n  \"hospital_records_sources\": [\n    \"King Abdulaziz University Hospital\",\n    \"Saudi German Hospital\",\n    \"Dr. Soliman Fakeeh Hospital\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /profile/{patientId}",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/profile/{{patientId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "profile",
+                "{{patientId}}"
+              ],
+              "query": []
+            },
+            "description": "Profile plus manual entries. Run after create-profile / update-manual-entry."
+          },
+          "response": []
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "Manual Entries",
+      "item": [
+        {
+          "name": "POST /update-manual-entry",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/update-manual-entry",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "update-manual-entry"
+              ],
+              "query": []
+            },
+            "description": "Uses reassignmentcheckin/manual_entries.json (18 entries).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"VTR-00471\",\n  \"export_format\": \"vitarc_manual_v1\",\n  \"entries\": [\n    {\n      \"id\": \"ME-001\",\n      \"type\": \"blood_pressure\",\n      \"timestamp\": \"2026-04-08T07:45:00Z\",\n      \"values\": {\n        \"systolic_mmhg\": 142,\n        \"diastolic_mmhg\": 88\n      },\n      \"context\": \"morning_fasting\",\n      \"notes\": null\n    },\n    {\n      \"id\": \"ME-002\",\n      \"type\": \"blood_glucose\",\n      \"timestamp\": \"2026-04-08T07:50:00Z\",\n      \"values\": {\n        \"glucose_mg_dl\": 168\n      },\n      \"context\": \"fasting\",\n      \"notes\": null\n    },\n    {\n      \"id\": \"ME-003\",\n      \"type\": \"medication_taken\",\n      \"timestamp\": \"2026-04-08T08:10:00Z\",\n      \"values\": {\n        \"medications\": [\n          \"Amlodipine 10mg\",\n          \"Losartan 100mg\",\n          \"Metformin 1000mg\"\n        ]\n      },\n      \"context\": \"morning_dose\",\n      \"notes\": null\n    },\n    {\n      \"id\": \"ME-004\",\n      \"type\": \"blood_glucose\",\n      \"timestamp\": \"2026-04-08T13:30:00Z\",\n      \"values\": {\n        \"glucose_mg_dl\": 195\n      },\n      \"context\": \"post_meal\",\n      \"notes\": \"Had kabsa for lunch\"\n    },\n    {\n      \"id\": \"ME-005\",\n      \"type\": \"blood_pressure\",\n      \"timestamp\": \"2026-04-08T18:00:00Z\",\n      \"values\": {\n        \"systolic_mmhg\": 134,\n        \"diastolic_mmhg\": 82\n      },\n      \"context\": \"evening\",\n      \"notes\": null\n    },\n    {\n      \"id\": \"ME-006\",\n      \"type\": \"medication_taken\",\n      \"timestamp\": \"2026-04-08T20:15:00Z\",\n      \"values\": {\n        \"medications\": [\n          \"Metformin 1000mg\"\n        ]\n      },\n      \"context\": \"evening_dose\",\n      \"notes\": null\n    },\n    {\n      \"id\": \"ME-007\",\n      \"type\": \"medication_taken\",\n      \"timestamp\": \"2026-04-08T22:05:00Z\",\n      \"values\": {\n        \"medications\": [\n          \"Atorvastatin 20mg\"\n        ]\n      },\n      \"context\": \"night_dose\",\n      \"notes\": null\n    },\n    {\n      \"id\": \"ME-008\",\n      \"type\": \"symptom\",\n      \"timestamp\": \"2026-04-08T23:30:00Z\",\n      \"values\": {\n        \"symptom\": \"mild_headache\",\n        \"severity\": 3\n      },\n      \"context\": \"bedtime\",\n      \"notes\": \"Slight headache, took paracetamol\"\n    },\n    {\n      \"id\": \"ME-009\",\n      \"type\": \"blood_pressure\",\n      \"timestamp\": \"2026-04-09T07:30:00Z\",\n      \"values\": {\n        \"systolic_mmhg\": 148,\n        \"diastolic_mmhg\": 92\n      },\n      \"context\": \"morning_fasting\",\n      \"notes\": \"Didn't sleep well\"\n    },\n    {\n      \"id\": \"ME-010\",\n      \"type\": \"blood_glucose\",\n      \"timestamp\": \"2026-04-09T07:35:00Z\",\n      \"values\": {\n        \"glucose_mg_dl\": 182\n      },\n      \"context\": \"fasting\",\n      \"notes\": null\n    },\n    {\n      \"id\": \"ME-011\",\n      \"type\": \"medication_taken\",\n      \"timestamp\": \"2026-04-09T11:45:00Z\",\n      \"values\": {\n        \"medications\": [\n          \"Amlodipine 10mg\",\n          \"Losartan 100mg\",\n          \"Metformin 1000mg\"\n        ]\n      },\n      \"context\": \"morning_dose\",\n      \"notes\": \"Forgot to take at 8am, took late\"\n    },\n    {\n      \"id\": \"ME-012\",\n      \"type\": \"blood_glucose\",\n      \"timestamp\": \"2026-04-09T14:00:00+03:00\",\n      \"values\": {\n        \"glucose_mmol_l\": 12.8\n      },\n      \"context\": \"post_meal\",\n      \"notes\": null\n    },\n    {\n      \"id\": \"ME-013\",\n      \"type\": \"blood_pressure\",\n      \"timestamp\": \"2026-04-09T16:30:00Z\",\n      \"values\": {\n        \"systolic_mmhg\": 162,\n        \"diastolic_mmhg\": 98\n      },\n      \"context\": \"afternoon\",\n      \"notes\": \"Feeling dizzy\"\n    },\n    {\n      \"id\": \"ME-014\",\n      \"type\": \"symptom\",\n      \"timestamp\": \"2026-04-09T16:35:00Z\",\n      \"values\": {\n        \"symptom\": \"dizziness\",\n        \"severity\": 6\n      },\n      \"context\": \"afternoon\",\n      \"notes\": \"Started around 3pm, getting worse\"\n    },\n    {\n      \"id\": \"ME-015\",\n      \"type\": \"blood_pressure\",\n      \"timestamp\": \"2026-04-09T19:00:00Z\",\n      \"values\": {\n        \"systolic\": 171,\n        \"diastolic\": 101\n      },\n      \"context\": \"evening\",\n      \"notes\": \"Still dizzy. Should I go to ER?\"\n    },\n    {\n      \"id\": \"ME-016\",\n      \"type\": \"symptom\",\n      \"timestamp\": \"2026-04-09T19:05:00Z\",\n      \"values\": {\n        \"symptom\": \"chest_tightness\",\n        \"severity\": 4\n      },\n      \"context\": \"evening\",\n      \"notes\": \"Mild tightness, might be anxiety\"\n    },\n    {\n      \"id\": \"ME-017\",\n      \"type\": \"medication_taken\",\n      \"timestamp\": \"2026-04-09T20:30:00Z\",\n      \"values\": {\n        \"medications\": [\n          \"Metformin 1000mg\"\n        ]\n      },\n      \"context\": \"evening_dose\",\n      \"notes\": null\n    },\n    {\n      \"id\": \"ME-018\",\n      \"type\": \"inhaler_use\",\n      \"timestamp\": \"2026-04-09T21:00:00Z\",\n      \"values\": {\n        \"medication\": \"Salbutamol\",\n        \"puffs\": 2\n      },\n      \"context\": \"as_needed\",\n      \"notes\": \"Chest felt tight, used inhaler as precaution\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "Lab Reports",
+      "item": [
+        {
+          "name": "POST /create-lab-report (cbc)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/create-lab-report",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "create-lab-report"
+              ],
+              "query": []
+            },
+            "description": "Manual typed CBC create (no file upload).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patientId}}\",\n  \"report_type\": \"cbc\",\n  \"report\": {\n    \"facility\": \"King Abdulaziz University Hospital\",\n    \"report_title\": \"Complete Blood Count\",\n    \"patient_name\": \"Sara Ahmed Shalabi\",\n    \"mrn\": \"2016-044891\",\n    \"age_years\": 55,\n    \"test_id\": \"7821\",\n    \"test_date\": \"2026-04-01\",\n    \"hemoglobin\": {\n      \"value_num\": 11.8,\n      \"value_text\": \"11.8\",\n      \"unit\": \"g/dL\",\n      \"reference_range\": \"12 - 15\"\n    },\n    \"wbc\": {\n      \"value_num\": 7.2,\n      \"value_text\": \"7.20\",\n      \"unit\": \"K/uL\",\n      \"reference_range\": \"4.5 - 13.5\"\n    },\n    \"platelets\": {\n      \"value_num\": 245,\n      \"value_text\": \"245\",\n      \"unit\": \"K/uL\",\n      \"reference_range\": \"150 - 450\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /extract-lab-reports (cbc) \u2014 attach lab_cbc_kauh.pdf",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/extract-lab-reports",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "extract-lab-reports"
+              ],
+              "query": []
+            },
+            "description": "File pre-attached: C:\\Users\\mrith\\Desktop\\VitaRC Assignment\\reassignmentcheckin\\lab_cbc_kauh.pdf",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "patient_id",
+                  "type": "text",
+                  "value": "{{patientId}}"
+                },
+                {
+                  "key": "report_type",
+                  "type": "text",
+                  "value": "cbc"
+                },
+                {
+                  "key": "files",
+                  "type": "file",
+                  "src": "C:\\Users\\mrith\\Desktop\\VitaRC Assignment\\reassignmentcheckin\\lab_cbc_kauh.pdf"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /extract-lab-reports (echo) \u2014 attach echocardiogram_fakeeh.pdf",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/extract-lab-reports",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "extract-lab-reports"
+              ],
+              "query": []
+            },
+            "description": "File pre-attached: C:\\Users\\mrith\\Desktop\\VitaRC Assignment\\reassignmentcheckin\\echocardiogram_fakeeh.pdf",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "patient_id",
+                  "type": "text",
+                  "value": "{{patientId}}"
+                },
+                {
+                  "key": "report_type",
+                  "type": "text",
+                  "value": "echo"
+                },
+                {
+                  "key": "files",
+                  "type": "file",
+                  "src": "C:\\Users\\mrith\\Desktop\\VitaRC Assignment\\reassignmentcheckin\\echocardiogram_fakeeh.pdf"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /extract-lab-reports (chest_radiology) \u2014 attach PHOTO-2026-05-25-18-43-01.jpg",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/extract-lab-reports",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "extract-lab-reports"
+              ],
+              "query": []
+            },
+            "description": "File pre-attached: C:\\Users\\mrith\\Desktop\\VitaRC Assignment\\reassignmentcheckin\\PHOTO-2026-05-25-18-43-01.jpg",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "patient_id",
+                  "type": "text",
+                  "value": "{{patientId}}"
+                },
+                {
+                  "key": "report_type",
+                  "type": "text",
+                  "value": "chest_radiology"
+                },
+                {
+                  "key": "files",
+                  "type": "file",
+                  "src": "C:\\Users\\mrith\\Desktop\\VitaRC Assignment\\reassignmentcheckin\\PHOTO-2026-05-25-18-43-01.jpg"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /extract-lab-reports (renal_ultrasound) \u2014 attach renal_ultrasound_sgh.pdf",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/extract-lab-reports",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "extract-lab-reports"
+              ],
+              "query": []
+            },
+            "description": "File pre-attached: C:\\Users\\mrith\\Desktop\\VitaRC Assignment\\reassignmentcheckin\\renal_ultrasound_sgh.pdf",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "patient_id",
+                  "type": "text",
+                  "value": "{{patientId}}"
+                },
+                {
+                  "key": "report_type",
+                  "type": "text",
+                  "value": "renal_ultrasound"
+                },
+                {
+                  "key": "files",
+                  "type": "file",
+                  "src": "C:\\Users\\mrith\\Desktop\\VitaRC Assignment\\reassignmentcheckin\\renal_ultrasound_sgh.pdf"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "Wearable",
+      "item": [
+        {
+          "name": "POST /ingest-wearable-export \u2014 attach wearable_export.xml",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/ingest-wearable-export",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "ingest-wearable-export"
+              ],
+              "query": []
+            },
+            "description": "File pre-attached: C:\\Users\\mrith\\Desktop\\VitaRC Assignment\\reassignmentcheckin\\wearable_export.xml",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "patient_id",
+                  "type": "text",
+                  "value": "{{patientId}}"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "C:\\Users\\mrith\\Desktop\\VitaRC Assignment\\reassignmentcheckin\\wearable_export.xml"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "Health Snapshot",
+      "item": [
+        {
+          "name": "GET /health-snapshot/{patientId}",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health-snapshot/{{patientId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health-snapshot",
+                "{{patientId}}"
+              ],
+              "query": []
+            },
+            "description": "Composite health snapshot: vitals, adherence, symptoms, findings, care attention"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('patient_id equals expected', function () { const json = pm.response.json(); pm.expect(json.patient_id).to.eql(pm.environment.get('patientId') || pm.collectionVariables.get('patientId')); });",
+                  "pm.test('recent_vitals is object', function () { const json = pm.response.json(); pm.expect(json.recent_vitals).to.be.an('object'); });",
+                  "pm.test('medication_adherence is object', function () { const json = pm.response.json(); pm.expect(json.medication_adherence).to.be.an('object'); });",
+                  "pm.test('symptoms is object', function () { const json = pm.response.json(); pm.expect(json.symptoms).to.be.an('object'); });",
+                  "pm.test('hospital_findings is object', function () { const json = pm.response.json(); pm.expect(json.hospital_findings).to.be.an('object'); });",
+                  "pm.test('care_attention is object', function () { const json = pm.response.json(); pm.expect(json.care_attention).to.be.an('object'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /health-snapshot/{patientId}?as_of&window_hours",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health-snapshot/{{patientId}}?as_of=2026-04-09T12:00:00Z&window_hours=48",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health-snapshot",
+                "{{patientId}}"
+              ],
+              "query": [
+                {
+                  "key": "as_of",
+                  "value": "2026-04-09T12:00:00Z"
+                },
+                {
+                  "key": "window_hours",
+                  "value": "48"
+                }
+              ]
+            },
+            "description": "Point-in-time composite snapshot with custom as_of and adherence/symptom window"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('window_hours equals expected', function () { const json = pm.response.json(); pm.expect(json.window_hours).to.eql(48); });",
+                  "pm.test('recent_vitals.vitals is array', function () { const json = pm.response.json(); pm.expect(json.recent_vitals.vitals).to.be.an('array'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /health-snapshot/.../recent-vitals",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health-snapshot/{{patientId}}/recent-vitals",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health-snapshot",
+                "{{patientId}}",
+                "recent-vitals"
+              ],
+              "query": []
+            },
+            "description": "Health snapshot: recent-vitals"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('patient_id equals expected', function () { const json = pm.response.json(); pm.expect(json.patient_id).to.eql(pm.environment.get('patientId') || pm.collectionVariables.get('patientId')); });",
+                  "pm.test('vitals is array', function () { const json = pm.response.json(); pm.expect(json.vitals).to.be.an('array'); });",
+                  "pm.test('anomalies is array', function () { const json = pm.response.json(); pm.expect(json.anomalies).to.be.an('array'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /health-snapshot/.../medication-adherence",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health-snapshot/{{patientId}}/medication-adherence",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health-snapshot",
+                "{{patientId}}",
+                "medication-adherence"
+              ],
+              "query": []
+            },
+            "description": "Health snapshot: medication-adherence"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('patient_id equals expected', function () { const json = pm.response.json(); pm.expect(json.patient_id).to.eql(pm.environment.get('patientId') || pm.collectionVariables.get('patientId')); });",
+                  "pm.test('medications is array', function () { const json = pm.response.json(); pm.expect(json.medications).to.be.an('array'); });",
+                  "pm.test('anomalies is array', function () { const json = pm.response.json(); pm.expect(json.anomalies).to.be.an('array'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /health-snapshot/.../symptoms",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health-snapshot/{{patientId}}/symptoms",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health-snapshot",
+                "{{patientId}}",
+                "symptoms"
+              ],
+              "query": []
+            },
+            "description": "Health snapshot: symptoms"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('patient_id equals expected', function () { const json = pm.response.json(); pm.expect(json.patient_id).to.eql(pm.environment.get('patientId') || pm.collectionVariables.get('patientId')); });",
+                  "pm.test('symptoms is array', function () { const json = pm.response.json(); pm.expect(json.symptoms).to.be.an('array'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /health-snapshot/.../hospital-findings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health-snapshot/{{patientId}}/hospital-findings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health-snapshot",
+                "{{patientId}}",
+                "hospital-findings"
+              ],
+              "query": []
+            },
+            "description": "Health snapshot: hospital-findings"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('patient_id equals expected', function () { const json = pm.response.json(); pm.expect(json.patient_id).to.eql(pm.environment.get('patientId') || pm.collectionVariables.get('patientId')); });",
+                  "pm.test('findings is array', function () { const json = pm.response.json(); pm.expect(json.findings).to.be.an('array'); });",
+                  "pm.test('anomalies is array', function () { const json = pm.response.json(); pm.expect(json.anomalies).to.be.an('array'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /health-snapshot/.../care-attention",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health-snapshot/{{patientId}}/care-attention",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health-snapshot",
+                "{{patientId}}",
+                "care-attention"
+              ],
+              "query": []
+            },
+            "description": "Health snapshot: care-attention"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('patient_id equals expected', function () { const json = pm.response.json(); pm.expect(json.patient_id).to.eql(pm.environment.get('patientId') || pm.collectionVariables.get('patientId')); });",
+                  "pm.test('items is array', function () { const json = pm.response.json(); pm.expect(json.items).to.be.an('array'); });"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": ""
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000"
+    },
+    {
+      "key": "patientId",
+      "value": "VTR-00471"
+    },
+    {
+      "key": "fixturesDir",
+      "value": "C:\\Users\\mrith\\Desktop\\VitaRC Assignment\\reassignmentcheckin"
+    }
+  ]
+}
