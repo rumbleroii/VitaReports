@@ -7,6 +7,7 @@ from app.models.lab_source import LabSource
 from app.models.manual_entry import ManualEntry
 from app.models.medication import Medication
 from app.models.patient import Patient
+from app.models.wearable_observation import WearableObservation
 
 __all__ = [
     "Allergy",
@@ -18,4 +19,5 @@ __all__ = [
     "ManualEntry",
     "Medication",
     "Patient",
+    "WearableObservation",
 ]

@@ -15,6 +15,7 @@ if TYPE_CHECKING:
     from app.models.lab_source import LabSource
     from app.models.manual_entry import ManualEntry
     from app.models.medication import Medication
+    from app.models.wearable_observation import WearableObservation
 
 
 class Patient(Base):
@@ -56,5 +57,8 @@ class Patient(Base):
         back_populates="patient", cascade="all, delete-orphan"
     )
     lab_reports: Mapped[list["LabReport"]] = relationship(
+        back_populates="patient", cascade="all, delete-orphan"
+    )
+    wearable_observations: Mapped[list["WearableObservation"]] = relationship(
         back_populates="patient", cascade="all, delete-orphan"
     )

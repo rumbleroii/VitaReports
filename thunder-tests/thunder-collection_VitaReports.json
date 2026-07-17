@@ -1,0 +1,462 @@
+{
+  "client": "Thunder Client",
+  "version": "1.2",
+  "name": "VitaReports",
+  "description": "All VitaReports APIs. Suggested order: create-profile \u2192 update-manual-entry \u2192 extract-lab-reports / ingest-wearable-export \u2192 GET profile \u2192 health-snapshot GETs. Select Local env (baseUrl, patientId). For multipart requests, attach files from reassignmentcheckin/.",
+  "dateExported": "2026-07-18T00:00:00.000Z",
+  "id": "2d5d6ece-89cc-57d1-a1a0-2718788e2f8b",
+  "folders": [
+    {
+      "_id": "ff7f63c7-c596-5924-b6e5-65231e18a902",
+      "name": "Root",
+      "colId": "2d5d6ece-89cc-57d1-a1a0-2718788e2f8b",
+      "containerId": "",
+      "sortNum": 10000
+    },
+    {
+      "_id": "ee7b5d1f-f69f-504a-8fde-f9acfad70f99",
+      "name": "Health",
+      "colId": "2d5d6ece-89cc-57d1-a1a0-2718788e2f8b",
+      "containerId": "",
+      "sortNum": 20000
+    },
+    {
+      "_id": "2ab58d0d-b56e-5e46-aee1-b5a6d79b0443",
+      "name": "Profile",
+      "colId": "2d5d6ece-89cc-57d1-a1a0-2718788e2f8b",
+      "containerId": "",
+      "sortNum": 30000
+    },
+    {
+      "_id": "43a8296e-f3dd-5be8-b348-98baf7f72ee5",
+      "name": "Manual Entries",
+      "colId": "2d5d6ece-89cc-57d1-a1a0-2718788e2f8b",
+      "containerId": "",
+      "sortNum": 40000
+    },
+    {
+      "_id": "8a13b958-9db1-5f70-b56f-5c10d54cc707",
+      "name": "Lab Reports",
+      "colId": "2d5d6ece-89cc-57d1-a1a0-2718788e2f8b",
+      "containerId": "",
+      "sortNum": 50000
+    },
+    {
+      "_id": "94bc332a-e60c-5df2-aa35-bd426efdcb49",
+      "name": "Wearable",
+      "colId": "2d5d6ece-89cc-57d1-a1a0-2718788e2f8b",
+      "containerId": "",
+      "sortNum": 60000
+    },
+    {
+      "_id": "5730137d-6ede-500d-aa38-4fe65820b269",
+      "name": "Health Snapshot",
+      "colId": "2d5d6ece-89cc-57d1-a1a0-2718788e2f8b",
+      "containerId": "",
+      "sortNum": 70000
+    }
+  ],
+  "requests": [
+    {
+      "_id": "7f74b48e-2287-59d4-8ae3-4b5539701e2d",
+      "colId": "2d5d6ece-89cc-57d1-a1a0-2718788e2f8b",
+      "containerId": "ff7f63c7-c596-5924-b6e5-65231e18a902",
+      "name": "GET /",
+      "url": "{{baseUrl}}/",
+      "method": "GET",
+      "sortNum": 10000,
+      "created": "2026-07-18T00:00:00.000Z",
+      "modified": "2026-07-18T00:00:00.000Z",
+      "headers": [],
+      "params": [],
+      "tests": [],
+      "docs": "Root ping",
+      "body": {
+        "type": "none",
+        "raw": "",
+        "form": []
+      }
+    },
+    {
+      "_id": "699b9fdc-0294-5c12-8307-ac49ab522c44",
+      "colId": "2d5d6ece-89cc-57d1-a1a0-2718788e2f8b",
+      "containerId": "ee7b5d1f-f69f-504a-8fde-f9acfad70f99",
+      "name": "GET /health",
+      "url": "{{baseUrl}}/health",
+      "method": "GET",
+      "sortNum": 10000,
+      "created": "2026-07-18T00:00:00.000Z",
+      "modified": "2026-07-18T00:00:00.000Z",
+      "headers": [],
+      "params": [],
+      "tests": [],
+      "docs": "Liveness check",
+      "body": {
+        "type": "none",
+        "raw": "",
+        "form": []
+      }
+    },
+    {
+      "_id": "73e89447-b609-56a9-8ed1-c504f41551f2",
+      "colId": "2d5d6ece-89cc-57d1-a1a0-2718788e2f8b",
+      "containerId": "2ab58d0d-b56e-5e46-aee1-b5a6d79b0443",
+      "name": "POST /create-profile",
+      "url": "{{baseUrl}}/create-profile",
+      "method": "POST",
+      "sortNum": 10000,
+      "created": "2026-07-18T00:00:00.000Z",
+      "modified": "2026-07-18T00:00:00.000Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "params": [],
+      "tests": [],
+      "docs": "Run first. Uses reassignmentcheckin/patient_profile.json (VTR-00471).",
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"patient_id\": \"VTR-00471\",\n  \"demographics\": {\n    \"name\": \"Sara Ahmed Shalabi\",\n    \"date_of_birth\": \"1971-03-14\",\n    \"gender\": \"Female\",\n    \"blood_type\": \"A+\",\n    \"height_cm\": 162,\n    \"weight_kg\": 78.4,\n    \"bmi\": 29.9,\n    \"national_id\": \"REDACTED\",\n    \"city\": \"Jeddah\",\n    \"emergency_contact\": {\n      \"name\": \"Khalid Shalabi\",\n      \"relation\": \"Son\",\n      \"phone\": \"+966-5X-XXX-XXXX\"\n    }\n  },\n  \"conditions\": [\n    {\n      \"icd10\": \"I10\",\n      \"name\": \"Essential Hypertension\",\n      \"diagnosed\": \"2016-08-22\",\n      \"status\": \"active\",\n      \"severity\": \"Stage 2\",\n      \"managing_facility\": \"King Abdulaziz University Hospital\"\n    },\n    {\n      \"icd10\": \"E11.65\",\n      \"name\": \"Type 2 Diabetes Mellitus with Hyperglycemia\",\n      \"diagnosed\": \"2019-01-10\",\n      \"status\": \"active\",\n      \"severity\": \"moderate\",\n      \"managing_facility\": \"Saudi German Hospital\"\n    },\n    {\n      \"icd10\": \"J45.30\",\n      \"name\": \"Mild Persistent Asthma\",\n      \"diagnosed\": \"2005-06-01\",\n      \"status\": \"active\",\n      \"severity\": \"mild\",\n      \"managing_facility\": \"Dr. Soliman Fakeeh Hospital\"\n    }\n  ],\n  \"medications\": [\n    {\n      \"name\": \"Amlodipine\",\n      \"dose\": \"10mg\",\n      \"frequency\": \"once daily\",\n      \"scheduled_time\": \"08:00\",\n      \"indication\": \"Hypertension\",\n      \"prescriber\": \"Dr. Faisal Al-Ghamdi\",\n      \"start_date\": \"2023-05-15\"\n    },\n    {\n      \"name\": \"Losartan\",\n      \"dose\": \"100mg\",\n      \"frequency\": \"once daily\",\n      \"scheduled_time\": \"08:00\",\n      \"indication\": \"Hypertension\",\n      \"prescriber\": \"Dr. Faisal Al-Ghamdi\",\n      \"start_date\": \"2021-11-03\"\n    },\n    {\n      \"name\": \"Metformin\",\n      \"dose\": \"1000mg\",\n      \"frequency\": \"twice daily\",\n      \"scheduled_time\": \"08:00, 20:00\",\n      \"indication\": \"Diabetes\",\n      \"prescriber\": \"Dr. Noura Al-Harbi\",\n      \"start_date\": \"2019-02-20\"\n    },\n    {\n      \"name\": \"Atorvastatin\",\n      \"dose\": \"20mg\",\n      \"frequency\": \"once daily\",\n      \"scheduled_time\": \"22:00\",\n      \"indication\": \"Dyslipidemia\",\n      \"prescriber\": \"Dr. Noura Al-Harbi\",\n      \"start_date\": \"2022-09-01\"\n    },\n    {\n      \"name\": \"Salbutamol Inhaler\",\n      \"dose\": \"100mcg/puff\",\n      \"frequency\": \"as needed\",\n      \"scheduled_time\": null,\n      \"indication\": \"Asthma\",\n      \"prescriber\": \"Dr. Amira Batarfi\",\n      \"start_date\": \"2005-06-15\"\n    }\n  ],\n  \"allergies\": [\n    {\n      \"substance\": \"Penicillin\",\n      \"reaction\": \"Urticaria\",\n      \"severity\": \"moderate\"\n    },\n    {\n      \"substance\": \"NSAIDs\",\n      \"reaction\": \"Bronchospasm\",\n      \"severity\": \"severe\",\n      \"note\": \"Linked to asthma exacerbation\"\n    }\n  ],\n  \"care_team\": [\n    {\n      \"name\": \"Dr. Faisal Al-Ghamdi\",\n      \"specialty\": \"Internal Medicine\",\n      \"facility\": \"King Abdulaziz University Hospital\",\n      \"last_visit\": \"2026-02-18\",\n      \"next_appointment\": \"2026-06-10\"\n    },\n    {\n      \"name\": \"Dr. Noura Al-Harbi\",\n      \"specialty\": \"Endocrinology\",\n      \"facility\": \"Saudi German Hospital\",\n      \"last_visit\": \"2026-01-05\",\n      \"next_appointment\": \"2026-04-20\"\n    },\n    {\n      \"name\": \"Dr. Amira Batarfi\",\n      \"specialty\": \"Pulmonology\",\n      \"facility\": \"Dr. Soliman Fakeeh Hospital\",\n      \"last_visit\": \"2025-10-30\",\n      \"next_appointment\": null\n    }\n  ],\n  \"hospital_records_sources\": [\n    \"King Abdulaziz University Hospital\",\n    \"Saudi German Hospital\",\n    \"Dr. Soliman Fakeeh Hospital\"\n  ]\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "bc5f6af3-4e08-5aac-8a99-49e090af6ccc",
+      "colId": "2d5d6ece-89cc-57d1-a1a0-2718788e2f8b",
+      "containerId": "2ab58d0d-b56e-5e46-aee1-b5a6d79b0443",
+      "name": "GET /profile/{patientId}",
+      "url": "{{baseUrl}}/profile/{{patientId}}",
+      "method": "GET",
+      "sortNum": 20000,
+      "created": "2026-07-18T00:00:00.000Z",
+      "modified": "2026-07-18T00:00:00.000Z",
+      "headers": [],
+      "params": [],
+      "tests": [],
+      "docs": "Profile plus manual entries. Run after create-profile / update-manual-entry.",
+      "body": {
+        "type": "none",
+        "raw": "",
+        "form": []
+      }
+    },
+    {
+      "_id": "f8937dda-effc-566e-91a1-eab0731e9506",
+      "colId": "2d5d6ece-89cc-57d1-a1a0-2718788e2f8b",
+      "containerId": "43a8296e-f3dd-5be8-b348-98baf7f72ee5",
+      "name": "POST /update-manual-entry",
+      "url": "{{baseUrl}}/update-manual-entry",
+      "method": "POST",
+      "sortNum": 10000,
+      "created": "2026-07-18T00:00:00.000Z",
+      "modified": "2026-07-18T00:00:00.000Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "params": [],
+      "tests": [],
+      "docs": "Uses reassignmentcheckin/manual_entries.json (18 entries).",
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"patient_id\": \"VTR-00471\",\n  \"export_format\": \"vitarc_manual_v1\",\n  \"entries\": [\n    {\n      \"id\": \"ME-001\",\n      \"type\": \"blood_pressure\",\n      \"timestamp\": \"2026-04-08T07:45:00Z\",\n      \"values\": {\n        \"systolic_mmhg\": 142,\n        \"diastolic_mmhg\": 88\n      },\n      \"context\": \"morning_fasting\",\n      \"notes\": null\n    },\n    {\n      \"id\": \"ME-002\",\n      \"type\": \"blood_glucose\",\n      \"timestamp\": \"2026-04-08T07:50:00Z\",\n      \"values\": {\n        \"glucose_mg_dl\": 168\n      },\n      \"context\": \"fasting\",\n      \"notes\": null\n    },\n    {\n      \"id\": \"ME-003\",\n      \"type\": \"medication_taken\",\n      \"timestamp\": \"2026-04-08T08:10:00Z\",\n      \"values\": {\n        \"medications\": [\n          \"Amlodipine 10mg\",\n          \"Losartan 100mg\",\n          \"Metformin 1000mg\"\n        ]\n      },\n      \"context\": \"morning_dose\",\n      \"notes\": null\n    },\n    {\n      \"id\": \"ME-004\",\n      \"type\": \"blood_glucose\",\n      \"timestamp\": \"2026-04-08T13:30:00Z\",\n      \"values\": {\n        \"glucose_mg_dl\": 195\n      },\n      \"context\": \"post_meal\",\n      \"notes\": \"Had kabsa for lunch\"\n    },\n    {\n      \"id\": \"ME-005\",\n      \"type\": \"blood_pressure\",\n      \"timestamp\": \"2026-04-08T18:00:00Z\",\n      \"values\": {\n        \"systolic_mmhg\": 134,\n        \"diastolic_mmhg\": 82\n      },\n      \"context\": \"evening\",\n      \"notes\": null\n    },\n    {\n      \"id\": \"ME-006\",\n      \"type\": \"medication_taken\",\n      \"timestamp\": \"2026-04-08T20:15:00Z\",\n      \"values\": {\n        \"medications\": [\n          \"Metformin 1000mg\"\n        ]\n      },\n      \"context\": \"evening_dose\",\n      \"notes\": null\n    },\n    {\n      \"id\": \"ME-007\",\n      \"type\": \"medication_taken\",\n      \"timestamp\": \"2026-04-08T22:05:00Z\",\n      \"values\": {\n        \"medications\": [\n          \"Atorvastatin 20mg\"\n        ]\n      },\n      \"context\": \"night_dose\",\n      \"notes\": null\n    },\n    {\n      \"id\": \"ME-008\",\n      \"type\": \"symptom\",\n      \"timestamp\": \"2026-04-08T23:30:00Z\",\n      \"values\": {\n        \"symptom\": \"mild_headache\",\n        \"severity\": 3\n      },\n      \"context\": \"bedtime\",\n      \"notes\": \"Slight headache, took paracetamol\"\n    },\n    {\n      \"id\": \"ME-009\",\n      \"type\": \"blood_pressure\",\n      \"timestamp\": \"2026-04-09T07:30:00Z\",\n      \"values\": {\n        \"systolic_mmhg\": 148,\n        \"diastolic_mmhg\": 92\n      },\n      \"context\": \"morning_fasting\",\n      \"notes\": \"Didn't sleep well\"\n    },\n    {\n      \"id\": \"ME-010\",\n      \"type\": \"blood_glucose\",\n      \"timestamp\": \"2026-04-09T07:35:00Z\",\n      \"values\": {\n        \"glucose_mg_dl\": 182\n      },\n      \"context\": \"fasting\",\n      \"notes\": null\n    },\n    {\n      \"id\": \"ME-011\",\n      \"type\": \"medication_taken\",\n      \"timestamp\": \"2026-04-09T11:45:00Z\",\n      \"values\": {\n        \"medications\": [\n          \"Amlodipine 10mg\",\n          \"Losartan 100mg\",\n          \"Metformin 1000mg\"\n        ]\n      },\n      \"context\": \"morning_dose\",\n      \"notes\": \"Forgot to take at 8am, took late\"\n    },\n    {\n      \"id\": \"ME-012\",\n      \"type\": \"blood_glucose\",\n      \"timestamp\": \"2026-04-09T14:00:00+03:00\",\n      \"values\": {\n        \"glucose_mmol_l\": 12.8\n      },\n      \"context\": \"post_meal\",\n      \"notes\": null\n    },\n    {\n      \"id\": \"ME-013\",\n      \"type\": \"blood_pressure\",\n      \"timestamp\": \"2026-04-09T16:30:00Z\",\n      \"values\": {\n        \"systolic_mmhg\": 162,\n        \"diastolic_mmhg\": 98\n      },\n      \"context\": \"afternoon\",\n      \"notes\": \"Feeling dizzy\"\n    },\n    {\n      \"id\": \"ME-014\",\n      \"type\": \"symptom\",\n      \"timestamp\": \"2026-04-09T16:35:00Z\",\n      \"values\": {\n        \"symptom\": \"dizziness\",\n        \"severity\": 6\n      },\n      \"context\": \"afternoon\",\n      \"notes\": \"Started around 3pm, getting worse\"\n    },\n    {\n      \"id\": \"ME-015\",\n      \"type\": \"blood_pressure\",\n      \"timestamp\": \"2026-04-09T19:00:00Z\",\n      \"values\": {\n        \"systolic\": 171,\n        \"diastolic\": 101\n      },\n      \"context\": \"evening\",\n      \"notes\": \"Still dizzy. Should I go to ER?\"\n    },\n    {\n      \"id\": \"ME-016\",\n      \"type\": \"symptom\",\n      \"timestamp\": \"2026-04-09T19:05:00Z\",\n      \"values\": {\n        \"symptom\": \"chest_tightness\",\n        \"severity\": 4\n      },\n      \"context\": \"evening\",\n      \"notes\": \"Mild tightness, might be anxiety\"\n    },\n    {\n      \"id\": \"ME-017\",\n      \"type\": \"medication_taken\",\n      \"timestamp\": \"2026-04-09T20:30:00Z\",\n      \"values\": {\n        \"medications\": [\n          \"Metformin 1000mg\"\n        ]\n      },\n      \"context\": \"evening_dose\",\n      \"notes\": null\n    },\n    {\n      \"id\": \"ME-018\",\n      \"type\": \"inhaler_use\",\n      \"timestamp\": \"2026-04-09T21:00:00Z\",\n      \"values\": {\n        \"medication\": \"Salbutamol\",\n        \"puffs\": 2\n      },\n      \"context\": \"as_needed\",\n      \"notes\": \"Chest felt tight, used inhaler as precaution\"\n    }\n  ]\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "4b1aa537-cfdd-5a6c-a7ad-e754af503506",
+      "colId": "2d5d6ece-89cc-57d1-a1a0-2718788e2f8b",
+      "containerId": "8a13b958-9db1-5f70-b56f-5c10d54cc707",
+      "name": "POST /create-lab-report (cbc)",
+      "url": "{{baseUrl}}/create-lab-report",
+      "method": "POST",
+      "sortNum": 10000,
+      "created": "2026-07-18T00:00:00.000Z",
+      "modified": "2026-07-18T00:00:00.000Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "params": [],
+      "tests": [],
+      "docs": "Manual typed CBC create (no file upload).",
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"patient_id\": \"{{patientId}}\",\n  \"report_type\": \"cbc\",\n  \"report\": {\n    \"facility\": \"King Abdulaziz University Hospital\",\n    \"report_title\": \"Complete Blood Count\",\n    \"patient_name\": \"Sara Ahmed Shalabi\",\n    \"mrn\": \"2016-044891\",\n    \"age_years\": 55,\n    \"test_id\": \"7821\",\n    \"test_date\": \"2026-04-01\",\n    \"hemoglobin\": {\n      \"value_num\": 11.8,\n      \"value_text\": \"11.8\",\n      \"unit\": \"g/dL\",\n      \"reference_range\": \"12 - 15\"\n    },\n    \"wbc\": {\n      \"value_num\": 7.2,\n      \"value_text\": \"7.20\",\n      \"unit\": \"K/uL\",\n      \"reference_range\": \"4.5 - 13.5\"\n    },\n    \"platelets\": {\n      \"value_num\": 245,\n      \"value_text\": \"245\",\n      \"unit\": \"K/uL\",\n      \"reference_range\": \"150 - 450\"\n    }\n  }\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "cd011dea-112f-591a-954a-7ffc50d5a501",
+      "colId": "2d5d6ece-89cc-57d1-a1a0-2718788e2f8b",
+      "containerId": "8a13b958-9db1-5f70-b56f-5c10d54cc707",
+      "name": "POST /extract-lab-reports (cbc) \u2014 attach lab_cbc_kauh.pdf",
+      "url": "{{baseUrl}}/extract-lab-reports",
+      "method": "POST",
+      "sortNum": 20000,
+      "created": "2026-07-18T00:00:00.000Z",
+      "modified": "2026-07-18T00:00:00.000Z",
+      "headers": [],
+      "params": [],
+      "tests": [],
+      "docs": "Attach reassignmentcheckin/lab_cbc_kauh.pdf as files",
+      "body": {
+        "type": "formdata",
+        "raw": "",
+        "form": [
+          {
+            "name": "patient_id",
+            "value": "{{patientId}}"
+          },
+          {
+            "name": "report_type",
+            "value": "cbc"
+          },
+          {
+            "name": "files",
+            "value": "",
+            "type": "file"
+          }
+        ]
+      }
+    },
+    {
+      "_id": "4b8d4664-d27a-5099-83ee-b127065f2d29",
+      "colId": "2d5d6ece-89cc-57d1-a1a0-2718788e2f8b",
+      "containerId": "8a13b958-9db1-5f70-b56f-5c10d54cc707",
+      "name": "POST /extract-lab-reports (echo) \u2014 attach echocardiogram_fakeeh.pdf",
+      "url": "{{baseUrl}}/extract-lab-reports",
+      "method": "POST",
+      "sortNum": 30000,
+      "created": "2026-07-18T00:00:00.000Z",
+      "modified": "2026-07-18T00:00:00.000Z",
+      "headers": [],
+      "params": [],
+      "tests": [],
+      "docs": "Attach reassignmentcheckin/echocardiogram_fakeeh.pdf as files",
+      "body": {
+        "type": "formdata",
+        "raw": "",
+        "form": [
+          {
+            "name": "patient_id",
+            "value": "{{patientId}}"
+          },
+          {
+            "name": "report_type",
+            "value": "echo"
+          },
+          {
+            "name": "files",
+            "value": "",
+            "type": "file"
+          }
+        ]
+      }
+    },
+    {
+      "_id": "19f141b2-5bd1-535b-8459-f0139311e076",
+      "colId": "2d5d6ece-89cc-57d1-a1a0-2718788e2f8b",
+      "containerId": "8a13b958-9db1-5f70-b56f-5c10d54cc707",
+      "name": "POST /extract-lab-reports (chest_radiology) \u2014 attach PHOTO-2026-05-25-18-43-01.jpg",
+      "url": "{{baseUrl}}/extract-lab-reports",
+      "method": "POST",
+      "sortNum": 40000,
+      "created": "2026-07-18T00:00:00.000Z",
+      "modified": "2026-07-18T00:00:00.000Z",
+      "headers": [],
+      "params": [],
+      "tests": [],
+      "docs": "Attach reassignmentcheckin/PHOTO-2026-05-25-18-43-01.jpg as files",
+      "body": {
+        "type": "formdata",
+        "raw": "",
+        "form": [
+          {
+            "name": "patient_id",
+            "value": "{{patientId}}"
+          },
+          {
+            "name": "report_type",
+            "value": "chest_radiology"
+          },
+          {
+            "name": "files",
+            "value": "",
+            "type": "file"
+          }
+        ]
+      }
+    },
+    {
+      "_id": "c5fbbbb6-debc-5ed7-9926-8681468ba0ae",
+      "colId": "2d5d6ece-89cc-57d1-a1a0-2718788e2f8b",
+      "containerId": "8a13b958-9db1-5f70-b56f-5c10d54cc707",
+      "name": "POST /extract-lab-reports (renal_ultrasound) \u2014 attach renal_ultrasound_sgh.pdf",
+      "url": "{{baseUrl}}/extract-lab-reports",
+      "method": "POST",
+      "sortNum": 50000,
+      "created": "2026-07-18T00:00:00.000Z",
+      "modified": "2026-07-18T00:00:00.000Z",
+      "headers": [],
+      "params": [],
+      "tests": [],
+      "docs": "Attach reassignmentcheckin/renal_ultrasound_sgh.pdf as files",
+      "body": {
+        "type": "formdata",
+        "raw": "",
+        "form": [
+          {
+            "name": "patient_id",
+            "value": "{{patientId}}"
+          },
+          {
+            "name": "report_type",
+            "value": "renal_ultrasound"
+          },
+          {
+            "name": "files",
+            "value": "",
+            "type": "file"
+          }
+        ]
+      }
+    },
+    {
+      "_id": "41a623b0-6f89-58fb-9e49-585140bf20f6",
+      "colId": "2d5d6ece-89cc-57d1-a1a0-2718788e2f8b",
+      "containerId": "94bc332a-e60c-5df2-aa35-bd426efdcb49",
+      "name": "POST /ingest-wearable-export \u2014 attach wearable_export.xml",
+      "url": "{{baseUrl}}/ingest-wearable-export",
+      "method": "POST",
+      "sortNum": 10000,
+      "created": "2026-07-18T00:00:00.000Z",
+      "modified": "2026-07-18T00:00:00.000Z",
+      "headers": [],
+      "params": [],
+      "tests": [],
+      "docs": "Attach reassignmentcheckin/wearable_export.xml as file",
+      "body": {
+        "type": "formdata",
+        "raw": "",
+        "form": [
+          {
+            "name": "patient_id",
+            "value": "{{patientId}}"
+          },
+          {
+            "name": "file",
+            "value": "",
+            "type": "file"
+          }
+        ]
+      }
+    },
+    {
+      "_id": "67e3ee74-98e9-551a-9d91-a1b531912969",
+      "colId": "2d5d6ece-89cc-57d1-a1a0-2718788e2f8b",
+      "containerId": "5730137d-6ede-500d-aa38-4fe65820b269",
+      "name": "GET /health-snapshot/.../recent-vitals",
+      "url": "{{baseUrl}}/health-snapshot/{{patientId}}/recent-vitals",
+      "method": "GET",
+      "sortNum": 10000,
+      "created": "2026-07-18T00:00:00.000Z",
+      "modified": "2026-07-18T00:00:00.000Z",
+      "headers": [],
+      "params": [],
+      "tests": [],
+      "docs": "Health snapshot: recent-vitals",
+      "body": {
+        "type": "none",
+        "raw": "",
+        "form": []
+      }
+    },
+    {
+      "_id": "8ca626d6-27d4-5c4b-9ded-a628cc28b095",
+      "colId": "2d5d6ece-89cc-57d1-a1a0-2718788e2f8b",
+      "containerId": "5730137d-6ede-500d-aa38-4fe65820b269",
+      "name": "GET /health-snapshot/.../medication-adherence",
+      "url": "{{baseUrl}}/health-snapshot/{{patientId}}/medication-adherence",
+      "method": "GET",
+      "sortNum": 20000,
+      "created": "2026-07-18T00:00:00.000Z",
+      "modified": "2026-07-18T00:00:00.000Z",
+      "headers": [],
+      "params": [],
+      "tests": [],
+      "docs": "Health snapshot: medication-adherence",
+      "body": {
+        "type": "none",
+        "raw": "",
+        "form": []
+      }
+    },
+    {
+      "_id": "4842ea2a-f076-554e-8526-8dd4f72e2051",
+      "colId": "2d5d6ece-89cc-57d1-a1a0-2718788e2f8b",
+      "containerId": "5730137d-6ede-500d-aa38-4fe65820b269",
+      "name": "GET /health-snapshot/.../symptoms",
+      "url": "{{baseUrl}}/health-snapshot/{{patientId}}/symptoms",
+      "method": "GET",
+      "sortNum": 30000,
+      "created": "2026-07-18T00:00:00.000Z",
+      "modified": "2026-07-18T00:00:00.000Z",
+      "headers": [],
+      "params": [],
+      "tests": [],
+      "docs": "Health snapshot: symptoms",
+      "body": {
+        "type": "none",
+        "raw": "",
+        "form": []
+      }
+    },
+    {
+      "_id": "d7f4deb2-3dfd-5cc9-8bfd-e64161e0f4c6",
+      "colId": "2d5d6ece-89cc-57d1-a1a0-2718788e2f8b",
+      "containerId": "5730137d-6ede-500d-aa38-4fe65820b269",
+      "name": "GET /health-snapshot/.../hospital-findings",
+      "url": "{{baseUrl}}/health-snapshot/{{patientId}}/hospital-findings",
+      "method": "GET",
+      "sortNum": 40000,
+      "created": "2026-07-18T00:00:00.000Z",
+      "modified": "2026-07-18T00:00:00.000Z",
+      "headers": [],
+      "params": [],
+      "tests": [],
+      "docs": "Health snapshot: hospital-findings",
+      "body": {
+        "type": "none",
+        "raw": "",
+        "form": []
+      }
+    },
+    {
+      "_id": "d8bc56f4-14e8-522d-89e1-d39f1dbb219a",
+      "colId": "2d5d6ece-89cc-57d1-a1a0-2718788e2f8b",
+      "containerId": "5730137d-6ede-500d-aa38-4fe65820b269",
+      "name": "GET /health-snapshot/.../care-attention",
+      "url": "{{baseUrl}}/health-snapshot/{{patientId}}/care-attention",
+      "method": "GET",
+      "sortNum": 50000,
+      "created": "2026-07-18T00:00:00.000Z",
+      "modified": "2026-07-18T00:00:00.000Z",
+      "headers": [],
+      "params": [],
+      "tests": [],
+      "docs": "Health snapshot: care-attention",
+      "body": {
+        "type": "none",
+        "raw": "",
+        "form": []
+      }
+    }
+  ]
+}
