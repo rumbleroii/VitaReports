@@ -2,6 +2,7 @@ from app.models.allergy import Allergy
 from app.models.care_team import CareTeamMember
 from app.models.condition import Condition
 from app.models.hospital_source import HospitalSource
+from app.models.lab_source import LabSource
 from app.models.medication import Medication
 from app.models.patient import Patient
 from app.schemas.profile import PatientProfileCreate, PatientProfileOut
@@ -69,6 +70,7 @@ def profile_to_patient(payload: PatientProfileCreate) -> Patient:
         hospital_sources=[
             HospitalSource(facility_name=name) for name in payload.hospital_records_sources
         ],
+        lab_sources=[LabSource(facility_name=name) for name in payload.lab_records_sources],
     )
 
 
@@ -134,4 +136,5 @@ def patient_to_profile(patient: Patient) -> PatientProfileOut:
             for m in patient.care_team_members
         ],
         hospital_records_sources=[s.facility_name for s in patient.hospital_sources],
+        lab_records_sources=[s.facility_name for s in patient.lab_sources],
     )

@@ -11,6 +11,8 @@ if TYPE_CHECKING:
     from app.models.care_team import CareTeamMember
     from app.models.condition import Condition
     from app.models.hospital_source import HospitalSource
+    from app.models.lab_report import LabReport
+    from app.models.lab_source import LabSource
     from app.models.manual_entry import ManualEntry
     from app.models.medication import Medication
 
@@ -47,6 +49,12 @@ class Patient(Base):
     hospital_sources: Mapped[list["HospitalSource"]] = relationship(
         back_populates="patient", cascade="all, delete-orphan"
     )
+    lab_sources: Mapped[list["LabSource"]] = relationship(
+        back_populates="patient", cascade="all, delete-orphan"
+    )
     manual_entries: Mapped[list["ManualEntry"]] = relationship(
+        back_populates="patient", cascade="all, delete-orphan"
+    )
+    lab_reports: Mapped[list["LabReport"]] = relationship(
         back_populates="patient", cascade="all, delete-orphan"
     )

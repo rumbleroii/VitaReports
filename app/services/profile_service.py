@@ -28,7 +28,9 @@ def _patient_query(db: Session, patient_id: str) -> Patient | None:
             selectinload(Patient.allergies),
             selectinload(Patient.care_team_members),
             selectinload(Patient.hospital_sources),
+            selectinload(Patient.lab_sources),
             selectinload(Patient.manual_entries),
+            selectinload(Patient.lab_reports),
         )
         .filter(Patient.patient_id == patient_id)
         .one_or_none()

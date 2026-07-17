@@ -64,6 +64,7 @@ class PatientProfileCreate(BaseModel):
     allergies: list[AllergyIn] = Field(default_factory=list)
     care_team: list[CareTeamMemberIn] = Field(default_factory=list)
     hospital_records_sources: list[str] = Field(default_factory=list)
+    lab_records_sources: list[str] = Field(default_factory=list)
 
 
 class PatientProfileOut(PatientProfileCreate):
