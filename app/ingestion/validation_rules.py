@@ -48,8 +48,8 @@ def _identity_ok(report: BaseModel) -> bool:
 
 def _cbc_missing(report: BaseModel) -> list[str]:
     missing: list[str] = []
-    if not _identity_ok(report):
-        missing.append("mrn|patient_name")
+    if not _has_text(_get(report, "patient_name")):
+        missing.append("patient_name")
     if _get(report, "test_date") is None:
         missing.append("test_date")
     for name in ("hemoglobin", "wbc", "platelets"):
@@ -60,8 +60,8 @@ def _cbc_missing(report: BaseModel) -> list[str]:
 
 def _echo_missing(report: BaseModel) -> list[str]:
     missing: list[str] = []
-    if not _identity_ok(report):
-        missing.append("mrn|patient_name")
+    if not _has_text(_get(report, "patient_name")):
+        missing.append("patient_name")
     if _get(report, "study_date") is None:
         missing.append("study_date")
     if not _has_quant(_get(report, "ef_percent")):
@@ -73,8 +73,8 @@ def _echo_missing(report: BaseModel) -> list[str]:
 
 def _radiology_missing(report: BaseModel) -> list[str]:
     missing: list[str] = []
-    if not _identity_ok(report):
-        missing.append("mrn|patient_name")
+    if not (_has_text(_get(report, "patient_name")) or _has_text(_get(report, "mrn"))):
+        missing.append("patient_name|mrn")
     if not _has_text(_get(report, "findings")):
         missing.append("findings")
     if not _has_list(_get(report, "impression")):
@@ -84,8 +84,8 @@ def _radiology_missing(report: BaseModel) -> list[str]:
 
 def _ultrasound_missing(report: BaseModel) -> list[str]:
     missing: list[str] = []
-    if not _identity_ok(report):
-        missing.append("mrn|patient_name")
+    if not _has_text(_get(report, "patient_name")):
+        missing.append("patient_name")
     if _get(report, "exam_date") is None:
         missing.append("exam_date")
     if not (_has_kidney(_get(report, "right_kidney")) or _has_kidney(_get(report, "left_kidney"))):

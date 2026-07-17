@@ -34,9 +34,6 @@ def main() -> int:
 
     client = httpx.Client(base_url=BASE, timeout=120.0)
 
-    r = client.get("/")
-    log("GET /", r.status_code == 200, f"status={r.status_code}")
-
     r = client.get("/health")
     log("GET /health", r.status_code == 200, f"status={r.status_code}")
 
@@ -128,44 +125,6 @@ def main() -> int:
             )
     else:
         log("POST /ingest-wearable-export", False, f"missing file {wearable_path}")
-
-    # Typed lab create (collection includes this; seeds findings when extract rejects)
-    cbc_payload = {
-        "patient_id": pid,
-        "report_type": "cbc",
-        "report": {
-            "facility": "King Abdulaziz University Hospital",
-            "report_title": "Complete Blood Count",
-            "patient_name": "Sara Ahmed Shalabi",
-            "mrn": "2016-044891",
-            "age_years": 55,
-            "test_id": "7821",
-            "test_date": "2026-04-01",
-            "hemoglobin": {
-                "value_num": 11.8,
-                "value_text": "11.8",
-                "unit": "g/dL",
-                "reference_range": "12 - 15",
-            },
-            "wbc": {
-                "value_num": 7.2,
-                "value_text": "7.20",
-                "unit": "K/uL",
-                "reference_range": "4.5 - 13.5",
-            },
-            "platelets": {
-                "value_num": 245,
-                "value_text": "245",
-                "unit": "K/uL",
-                "reference_range": "150 - 450",
-            },
-        },
-    }
-    r = client.post("/create-lab-report", json=cbc_payload)
-    if r.status_code in (200, 201):
-        log("POST /create-lab-report (cbc)", True, f"status={r.status_code}")
-    else:
-        log("POST /create-lab-report (cbc)", False, f"status={r.status_code} {r.text[:300]}")
 
     r = client.get(f"/profile/{pid}")
     if r.status_code == 200:

@@ -7,29 +7,6 @@
   },
   "item": [
     {
-      "name": "Root",
-      "item": [
-        {
-          "name": "GET /",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [],
-              "query": []
-            },
-            "description": "Root ping"
-          },
-          "response": []
-        }
-      ],
-      "description": ""
-    },
-    {
       "name": "Health",
       "item": [
         {
@@ -156,41 +133,7 @@
       "name": "Lab Reports",
       "item": [
         {
-          "name": "POST /create-lab-report (cbc)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/create-lab-report",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "create-lab-report"
-              ],
-              "query": []
-            },
-            "description": "Manual typed CBC create (no file upload).",
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"patient_id\": \"{{patientId}}\",\n  \"report_type\": \"cbc\",\n  \"report\": {\n    \"facility\": \"King Abdulaziz University Hospital\",\n    \"report_title\": \"Complete Blood Count\",\n    \"patient_name\": \"Sara Ahmed Shalabi\",\n    \"mrn\": \"2016-044891\",\n    \"age_years\": 55,\n    \"test_id\": \"7821\",\n    \"test_date\": \"2026-04-01\",\n    \"hemoglobin\": {\n      \"value_num\": 11.8,\n      \"value_text\": \"11.8\",\n      \"unit\": \"g/dL\",\n      \"reference_range\": \"12 - 15\"\n    },\n    \"wbc\": {\n      \"value_num\": 7.2,\n      \"value_text\": \"7.20\",\n      \"unit\": \"K/uL\",\n      \"reference_range\": \"4.5 - 13.5\"\n    },\n    \"platelets\": {\n      \"value_num\": 245,\n      \"value_text\": \"245\",\n      \"unit\": \"K/uL\",\n      \"reference_range\": \"150 - 450\"\n    }\n  }\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "POST /extract-lab-reports (cbc) \u2014 attach lab_cbc_kauh.pdf",
-          "request": {
+          "name": "POST /extract-lab-reports (cbc) \u2014 attach lab_cbc_kauh.pdf",          "request": {
             "method": "POST",
             "header": [],
             "url": {

@@ -1,4 +1,4 @@
-"""Transthoracic echocardiogram report schema (Fakeeh echocardiogram_fakeeh.pdf)."""
+"""Transthoracic echocardiogram report schema (Fakeeh-style)."""
 
 from datetime import date
 
@@ -8,11 +8,10 @@ from app.schemas.reports_common import NarrativeSection, QuantitativeValue
 
 
 class EchoReport(BaseModel):
-    """Transthoracic echocardiogram from Dr. Soliman Fakeeh Hospital."""
+    """Transthoracic echocardiogram mapped from Fakeeh-style echo PDFs."""
 
     facility: str | None = None
     department: str | None = None
-    address: str | None = None
     report_title: str | None = None
 
     patient_name: str | None = None

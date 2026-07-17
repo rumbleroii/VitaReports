@@ -1,4 +1,4 @@
-"""Lab report create + multi-file extract orchestration."""
+"""Multi-file lab report extract orchestration."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from app.ingestion.file_kinds import detect_file_kind
 from app.models.lab_report import LabReport
 from app.models.patient import Patient
 from app.schemas.extraction import ExtractLabReportsResult, FileExtractionResult
-from app.schemas.lab_report import LabReportCreate, LabReportOut
+from app.schemas.lab_report import LabReportOut
 from app.services.ocr_service import OcrService
 from app.services.parsing_service import ParsingService
 from app.services.profile_service import ProfileNotFoundError
@@ -44,20 +44,6 @@ def _persist_lab_report(
         report_type=model.report_type,
         content=model.content,
         created_at=model.created_at,
-    )
-
-
-def create_lab_report(db: Session, payload: LabReportCreate) -> LabReportOut:
-    patient = db.get(Patient, payload.patient_id)
-    if patient is None:
-        raise ProfileNotFoundError(payload.patient_id)
-
-    content = payload.report.model_dump(mode="json")
-    return _persist_lab_report(
-        db,
-        patient_id=payload.patient_id,
-        report_type=payload.report_type,
-        content=content,
     )
 
 

@@ -7,7 +7,7 @@ import shutil
 from pathlib import Path
 
 import pytesseract
-from PIL import Image
+from PIL import Image, ImageEnhance, ImageOps
 
 from app.ingestion.parsed_document import ParsedDocument
 
@@ -25,12 +25,24 @@ def _configure_tesseract() -> None:
 _configure_tesseract()
 
 
+def _prepare_image(image: Image.Image) -> Image.Image:
+    """Contrast + upscale — phone photos of printed forms need both."""
+    gray = ImageOps.grayscale(image)
+    boosted = ImageEnhance.Contrast(gray).enhance(1.8)
+    return boosted.resize(
+        (boosted.width * 2, boosted.height * 2),
+        Image.Resampling.LANCZOS,
+    )
+
+
 class OcrService:
     """OCR a single image into a ParsedDocument."""
 
     def ocr(self, data: bytes) -> ParsedDocument:
         image = Image.open(io.BytesIO(data))
-        text = pytesseract.image_to_string(image) or ""
+        prepared = _prepare_image(image)
+        # psm 6 = assume a uniform block of text (form photos).
+        text = pytesseract.image_to_string(prepared, config="--psm 6") or ""
         text = text.strip()
         return ParsedDocument(
             text=text,

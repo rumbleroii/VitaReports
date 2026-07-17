@@ -26,8 +26,3 @@ app.include_router(manual_entries.router)
 app.include_router(lab_reports.router)
 app.include_router(wearable.router)
 app.include_router(health_snapshot.router)
-
-
-@app.get("/")
-def root() -> dict:
-    return {"message": "VitaReports"}
