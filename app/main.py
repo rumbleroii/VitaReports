@@ -4,7 +4,7 @@ from fastapi import FastAPI
 
 from app.db import init_db
 from app.dependencies import get_settings
-from app.routers import health, lab_reports, manual_entries, profile
+from app.routers import health, health_snapshot, lab_reports, manual_entries, profile
 
 settings = get_settings()
 
@@ -24,6 +24,7 @@ app.include_router(health.router)
 app.include_router(profile.router)
 app.include_router(manual_entries.router)
 app.include_router(lab_reports.router)
+app.include_router(health_snapshot.router)
 
 
 @app.get("/")

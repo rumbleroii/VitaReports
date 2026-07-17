@@ -3,11 +3,26 @@
 from __future__ import annotations
 
 import io
+import shutil
+from pathlib import Path
 
 import pytesseract
 from PIL import Image
 
 from app.ingestion.parsed_document import ParsedDocument
+
+_WINDOWS_TESSERACT = Path(r"C:\Program Files\Tesseract-OCR\tesseract.exe")
+
+
+def _configure_tesseract() -> None:
+    """Prefer PATH; fall back to the common Windows install location."""
+    if shutil.which("tesseract"):
+        return
+    if _WINDOWS_TESSERACT.is_file():
+        pytesseract.pytesseract.tesseract_cmd = str(_WINDOWS_TESSERACT)
+
+
+_configure_tesseract()
 
 
 class OcrService:
