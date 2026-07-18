@@ -28,9 +28,12 @@ class WearableObservationOut(BaseModel):
 
 class WearableIngestResult(BaseModel):
     patient_id: str
+    source_type: str = "apple_health"
     export_date: datetime | None = None
     records_ingested: int = 0
-    records_skipped: int = 0
+    records_skipped: int = 0  # unmapped / unparseable in the export adapter
+    records_duplicate: int = 0  # exact fingerprint already stored (or within file)
+    records_future_skipped: int = 0  # end_at after ingest time (UTC now)
     by_metric: dict[str, int] = Field(default_factory=dict)
     sources: list[str] = Field(default_factory=list)
     me: WearableMeOut = Field(default_factory=WearableMeOut)

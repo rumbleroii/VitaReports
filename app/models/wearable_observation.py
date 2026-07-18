@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from sqlalchemy import DateTime, ForeignKey, String
+from sqlalchemy import DateTime, ForeignKey, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import JSON
 
@@ -13,11 +13,19 @@ if TYPE_CHECKING:
 
 class WearableObservation(Base):
     __tablename__ = "wearable_observations"
+    __table_args__ = (
+        UniqueConstraint(
+            "patient_id",
+            "fingerprint",
+            name="uq_wearable_patient_fingerprint",
+        ),
+    )
 
     id: Mapped[str] = mapped_column(String(64), primary_key=True)
     patient_id: Mapped[str] = mapped_column(
         String(64), ForeignKey("patients.patient_id", ondelete="CASCADE"), nullable=False
     )
+    fingerprint: Mapped[str] = mapped_column(String(64), nullable=False)
     metric_type: Mapped[str] = mapped_column(String(64), nullable=False)
     hk_type: Mapped[str] = mapped_column(String(128), nullable=False)
     start_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)

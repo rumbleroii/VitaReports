@@ -118,10 +118,13 @@ POST /ingest-wearable-export
 Content-Type: multipart/form-data
 ```
 
-- `patient_id`
-- `file`: `wearable_export.xml` (Apple Health)
+| Field | Values |
+|---|---|
+| `patient_id` | from profile |
+| `source_type` | `apple_health` (default; extend Literal when adding devices) |
+| `file` | export file for that source (`wearable_export.xml` for Apple) |
 
-Re-ingest replaces that patient’s wearable observations (full-export semantics).
+Re-ingest **appends** with fingerprint dedupe (exact samples skipped; conflicts kept as separate rows). Future-dated samples (`end_at` > now) are skipped. After the `fingerprint` column was added, delete `data/vitarc.db` and re-ingest if the old schema is still on disk.
 
 ### 5. Health snapshot
 

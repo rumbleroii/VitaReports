@@ -28,7 +28,7 @@ source file → adapter/parser → normalize units/time → validate → persist
                               schema + required-field gate (≥85% match)
 ```
 
-Adapters are the extension point for a new source. Profile and manual entries are JSON-in; wearables go through an Apple Health XML adapter; hospital PDFs/images go through pdfplumber or Tesseract OCR, then report-type-specific extractors that tolerate bilingual headers and layout variation via synonyms rather than fixed coordinates.
+Adapters are the extension point for a new source. Profile and manual entries are JSON-in; wearables take a `source_type` form field (default `apple_health`, same idea as lab `report_type`); hospital PDFs/images go through pdfplumber or Tesseract OCR, then report-type-specific extractors that tolerate bilingual headers and layout variation via synonyms rather than fixed coordinates.
 
 **Health snapshot.** `GET /health-snapshot/{patient_id}` answers the five required questions: recent vitals (what/when/how), 48h medication adherence, reported symptoms, clinically relevant hospital findings, and care-attention items. Granular sub-routes exist for the same sections. `as_of` / `window_hours` support point-in-time evaluation against the fixture window.
 
@@ -48,7 +48,7 @@ Severity maps into care-attention priority. I deliberately kept rules transparen
 1. **Normalize at the edge.** Timestamps → UTC. Glucose mmol/L → mg/dL. SpO₂ fractional Apple values → percent. Downstream logic should not re-learn source quirks.
 2. **Conservative lab persistence.** Required fields hard-fail; otherwise accept only if field match ≥85%. A bad extract is worse than a missing report. Batch semantics: one rejected file does not fail siblings; all-reject returns 422 with per-file detail.
 3. **Global thresholds first.** Patient-specific ranges would be better long-term, but need longitudinal history and clinician override UX we do not have. Thresholds are centralized so they are easy to specialize later.
-4. **Wearable re-ingest replaces the patient’s wearable set.** Safer for a full Apple export than inventing partial-merge dedup without a stable record id. Duplicate Apple records within one export are left as-is (snapshot uses latest / short history).
+4. **Wearable ingest is append + fingerprint dedupe.** Each sample gets a SHA-256 fingerprint over patient, metric, HK type, start/end, source, and normalized value. Re-uploads skip exact matches; new timestamps fill gaps; same time with a different value/source inserts a sibling row (conflict kept for read-time policy). Samples with `end_at` in the future are dropped. No wipe on re-ingest. `source_type` selects the parser (`apple_health` today).
 5. **Chest imaging fixture.** The data pack provides a JPG (`PHOTO-…jpg`) rather than `chest_xray_kauh.pdf`. The pipeline accepts images via OCR for that path — same extractor contract as PDF radiology.
 6. **Facility source lists stay on the patient row.** Profile JSON includes `hospital_records_sources` / `lab_records_sources`. I store them as JSON columns on `patients` rather than `hospital_sources` / `lab_sources` tables. They are not FKs for `lab_reports` (facility on a report lives in report `content`); normalizing string lists into tables added join noise without query value.
 

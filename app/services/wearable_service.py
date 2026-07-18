@@ -1,9 +1,12 @@
-"""Apple Health wearable export ingest orchestration."""
+"""Wearable export ingest orchestration."""
 
 from __future__ import annotations
 
+import hashlib
+import json
 from collections import Counter
 from datetime import date, datetime, timezone
+from typing import Any
 from uuid import uuid4
 
 from sqlalchemy.orm import Session
@@ -21,6 +24,7 @@ from app.services.profile_service import ProfileNotFoundError
 
 _DEFAULT_WEARABLE_LIMIT = 200
 _MAX_WEARABLE_LIMIT = 2000
+_VALID_SOURCE_TYPES = {"apple_health"}
 
 
 def _ensure_aware(dt: datetime | None) -> datetime | None:
@@ -29,6 +33,10 @@ def _ensure_aware(dt: datetime | None) -> datetime | None:
     if dt.tzinfo is None:
         return dt.replace(tzinfo=timezone.utc)
     return dt.astimezone(timezone.utc)
+
+
+def _utc_now() -> datetime:
+    return datetime.now(timezone.utc)
 
 
 def _ensure_patient(db: Session, patient_id: str) -> Patient:
@@ -46,6 +54,30 @@ def _profile_match(patient: Patient, me_dob: str | None) -> bool:
     except ValueError:
         return False
     return export_dob == patient.date_of_birth
+
+
+def observation_fingerprint(
+    *,
+    patient_id: str,
+    metric_type: str,
+    hk_type: str,
+    start_at: datetime,
+    end_at: datetime,
+    source_name: str | None,
+    value_normalized: dict[str, Any],
+) -> str:
+    """Stable id for an exact sample (idempotent re-ingest / within-file dupes)."""
+    payload = {
+        "patient_id": patient_id,
+        "metric_type": metric_type,
+        "hk_type": hk_type,
+        "start_at": _ensure_aware(start_at).isoformat(),
+        "end_at": _ensure_aware(end_at).isoformat(),
+        "source_name": source_name or "",
+        "value": value_normalized,
+    }
+    raw = json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str)
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
 def _observation_to_out(row: WearableObservation) -> WearableObservationOut:
@@ -86,7 +118,6 @@ def list_wearable_observations(
     )
     if metric_type is not None:
         query = query.filter(WearableObservation.metric_type == metric_type)
-    # Window on observation end time (same clock used for "latest" ordering).
     if start is not None:
         query = query.filter(WearableObservation.end_at >= start)
     if end is not None:
@@ -111,27 +142,67 @@ def ingest_wearable_export(
     db: Session,
     *,
     patient_id: str,
-    xml_bytes: bytes,
+    file_bytes: bytes,
+    source_type: str = "apple_health",
 ) -> WearableIngestResult:
-    patient = _ensure_patient(db, patient_id)
-    parsed = parse_apple_health_export(xml_bytes)
+    if source_type not in _VALID_SOURCE_TYPES:
+        raise ValueError(f"Unsupported source_type: {source_type}")
 
-    db.query(WearableObservation).filter(
-        WearableObservation.patient_id == patient_id
-    ).delete()
+    patient = _ensure_patient(db, patient_id)
+
+    if source_type == "apple_health":
+        parsed = parse_apple_health_export(file_bytes)
+    else:
+        raise ValueError(f"Unsupported source_type: {source_type}")
+
+    # Append + fingerprint dedupe (no wipe). Exact sample twice → skip;
+    # same time / different value or source → new fingerprint → insert.
+    known = {
+        fp
+        for (fp,) in db.query(WearableObservation.fingerprint)
+        .filter(WearableObservation.patient_id == patient_id)
+        .all()
+    }
 
     by_metric: Counter[str] = Counter()
     sources: set[str] = set()
+    ingested = 0
+    duplicates = 0
+    future_skipped = 0
+    now = _utc_now()
 
     for obs in parsed.observations:
+        start_at = _ensure_aware(obs.start_at)
+        end_at = _ensure_aware(obs.end_at)
+        assert start_at is not None and end_at is not None
+
+        if end_at > now:
+            future_skipped += 1
+            continue
+
+        fp = observation_fingerprint(
+            patient_id=patient_id,
+            metric_type=obs.metric_type,
+            hk_type=obs.hk_type,
+            start_at=start_at,
+            end_at=end_at,
+            source_name=obs.source_name,
+            value_normalized=obs.value_normalized,
+        )
+        if fp in known:
+            duplicates += 1
+            continue
+
+        known.add(fp)
         db.add(
             WearableObservation(
                 id=str(uuid4()),
                 patient_id=patient_id,
+                fingerprint=fp,
                 metric_type=obs.metric_type,
                 hk_type=obs.hk_type,
-                start_at=obs.start_at,
-                end_at=obs.end_at,
+                start_at=start_at,
+                end_at=end_at,
                 source_name=obs.source_name,
                 unit=obs.unit,
                 value_raw=obs.value_raw,
@@ -139,6 +210,7 @@ def ingest_wearable_export(
                 metadata_json=obs.metadata_json,
             )
         )
+        ingested += 1
         by_metric[obs.metric_type] += 1
         if obs.source_name:
             sources.add(obs.source_name)
@@ -153,9 +225,12 @@ def ingest_wearable_export(
 
     return WearableIngestResult(
         patient_id=patient_id,
+        source_type=source_type,
         export_date=parsed.export_date,
-        records_ingested=len(parsed.observations),
+        records_ingested=ingested,
         records_skipped=parsed.records_skipped,
+        records_duplicate=duplicates,
+        records_future_skipped=future_skipped,
         by_metric=dict(by_metric),
         sources=sorted(sources),
         me=me_out,

@@ -1,6 +1,6 @@
 from datetime import datetime
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile, status
 from sqlalchemy.orm import Session
@@ -11,6 +11,9 @@ from app.services.profile_service import ProfileNotFoundError
 from app.services.wearable_service import ingest_wearable_export, list_wearable_observations
 
 router = APIRouter(tags=["wearable"])
+
+# Same idea as lab report_type — add values when new device adapters exist.
+SourceTypeForm = Literal["apple_health"]
 
 
 def _is_xml_upload(filename: str | None, content_type: str | None) -> bool:
@@ -82,22 +85,28 @@ async def ingest_wearable_export_endpoint(
     db: Annotated[Session, Depends(get_db)],
     patient_id: Annotated[str, Form()],
     file: Annotated[UploadFile, File()],
+    source_type: Annotated[SourceTypeForm, Form()] = "apple_health",
 ) -> WearableIngestResult:
-    if not _is_xml_upload(file.filename, file.content_type):
+    if source_type == "apple_health" and not _is_xml_upload(file.filename, file.content_type):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Expected an Apple Health .xml export file",
+            detail="apple_health expects an Apple Health .xml export file",
         )
 
-    xml_bytes = await file.read()
-    if not xml_bytes:
+    file_bytes = await file.read()
+    if not file_bytes:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Uploaded file is empty",
         )
 
     try:
-        return ingest_wearable_export(db, patient_id=patient_id, xml_bytes=xml_bytes)
+        return ingest_wearable_export(
+            db,
+            patient_id=patient_id,
+            file_bytes=file_bytes,
+            source_type=source_type,
+        )
     except ProfileNotFoundError as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

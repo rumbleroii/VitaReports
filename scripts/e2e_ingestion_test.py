@@ -105,7 +105,7 @@ def main() -> int:
         with wearable_path.open("rb") as handle:
             response = client.post(
                 "/ingest-wearable-export",
-                data={"patient_id": pid},
+                data={"patient_id": pid, "source_type": "apple_health"},
                 files=[("file", (wearable_path.name, handle, "application/xml"))],
             )
         if response.status_code == 200:
@@ -115,6 +115,8 @@ def main() -> int:
                 True,
                 f"records_ingested={body.get('records_ingested')} "
                 f"skipped={body.get('records_skipped')} "
+                f"duplicate={body.get('records_duplicate')} "
+                f"future={body.get('records_future_skipped')} "
                 f"by_metric={body.get('by_metric')}",
             )
         else:
