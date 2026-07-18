@@ -170,3 +170,5 @@ Import `postman/VitaReports.postman_collection.json` and `postman/Local.postman_
 - All timestamps are normalized to UTC at ingest.
 - Anomaly thresholds are global clinical defaults (see `app/services/anomaly_rules.py`), not patient-specific.
 - Cross-source anomaly correlation is deferred; see [WRITEUP.md](./WRITEUP.md).
+- Profile facility lists (`hospital_records_sources` / `lab_records_sources`) are JSON on `patients`, not separate tables and not linked to ingested `lab_reports`.
+- Schema is created with SQLAlchemy `create_all`. After model changes, delete `data/vitarc.db` and re-ingest (no migration layer in this take-home).

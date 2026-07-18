@@ -28,7 +28,7 @@ SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
 
 def init_db() -> None:
-    # Import models so metadata is registered before create_all.
+    # Side-effect import: register models on Base.metadata before create_all.
     import app.models  # noqa: F401
 
     Base.metadata.create_all(bind=engine)

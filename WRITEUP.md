@@ -10,7 +10,8 @@ Sara Shalabi’s data arrives from three hospitals, an Apple Watch export, and s
 
 **Data model.** Heterogeneous sources do not share one row shape. I used a patient-centric relational model with typed source tables rather than a single generic event log:
 
-- `patients` + related profile tables (conditions, medications, allergies, care team, hospital/lab source registries)
+- `patients` + related profile tables (conditions, medications, allergies, care team)
+- Facility registries from the profile (`hospital_records_sources`, `lab_records_sources`) live as **JSON lists on `patients`**, not separate tables — they are declared metadata (“where does this patient have records?”), never joined to ingested reports
 - `manual_entries` — app-reported vitals, meds, symptoms (normalized JSON payload + UTC timestamp)
 - `wearable_observations` — Apple Health metrics with raw + normalized values
 - `lab_reports` — structured report JSON keyed by report type (CBC, echo, chest radiology, renal ultrasound)
@@ -49,6 +50,7 @@ Severity maps into care-attention priority. I deliberately kept rules transparen
 3. **Global thresholds first.** Patient-specific ranges would be better long-term, but need longitudinal history and clinician override UX we do not have. Thresholds are centralized so they are easy to specialize later.
 4. **Wearable re-ingest replaces the patient’s wearable set.** Safer for a full Apple export than inventing partial-merge dedup without a stable record id. Duplicate Apple records within one export are left as-is (snapshot uses latest / short history).
 5. **Chest imaging fixture.** The data pack provides a JPG (`PHOTO-…jpg`) rather than `chest_xray_kauh.pdf`. The pipeline accepts images via OCR for that path — same extractor contract as PDF radiology.
+6. **Facility source lists stay on the patient row.** Profile JSON includes `hospital_records_sources` / `lab_records_sources`. I store them as JSON columns on `patients` rather than `hospital_sources` / `lab_sources` tables. They are not FKs for `lab_reports` (facility on a report lives in report `content`); normalizing string lists into tables added join noise without query value.
 
 ## What I chose not to build
 
