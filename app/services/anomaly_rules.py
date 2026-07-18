@@ -210,62 +210,6 @@ def detect_vital_threshold_anomalies(vital: RecentVitalItem) -> list[AnomalyItem
     return anomalies
 
 
-def _series_numeric_key(metric_type: str) -> str | None:
-    return {
-        "blood_pressure": "systolic_mmhg",
-        "blood_glucose": "glucose_mg_dl",
-        "heart_rate": "bpm",
-        "spo2": "percent",
-    }.get(metric_type)
-
-
-def detect_vital_trend_anomalies(
-    metric_type: str,
-    series_oldest_first: list[tuple[datetime | None, dict[str, Any], str | None]],
-    *,
-    latest_over_threshold: bool = False,
-) -> list[AnomalyItem]:
-    """series_oldest_first: (captured_at, values, source_id) chronological order."""
-    key = _series_numeric_key(metric_type)
-    if not key or len(series_oldest_first) < 3:
-        return []
-
-    points: list[tuple[float, str | None]] = []
-    for _ts, values, source_id in series_oldest_first:
-        num = _as_float(values.get(key))
-        if num is None and metric_type == "heart_rate":
-            num = _as_float(values.get("heart_rate"))
-        if num is None and metric_type == "spo2":
-            num = _as_float(values.get("spo2"))
-        if num is None:
-            return []
-        points.append((num, source_id))
-
-    # Use the last 3+ consecutive points available
-    values_only = [p[0] for p in points]
-    rising = all(values_only[i] < values_only[i + 1] for i in range(len(values_only) - 1))
-    falling = all(values_only[i] > values_only[i + 1] for i in range(len(values_only) - 1))
-    if not rising and not falling:
-        return []
-
-    severity = "high" if latest_over_threshold else "medium"
-    arrow = " → ".join(str(v) for v in values_only)
-    code = "vital.trend_rising" if rising else "vital.trend_falling"
-    direction = "rising" if rising else "falling"
-    source_refs = [s for _, s in points if s]
-    return [
-        AnomalyItem(
-            code=code,
-            severity=severity,
-            message=f"{metric_type} showing sustained {direction} trend",
-            metric=key,
-            observed_value=arrow,
-            expected="no sustained directional trend",
-            source_ref=",".join(source_refs) if source_refs else None,
-        )
-    ]
-
-
 def detect_adherence_anomalies(
     med: MedicationDoseStatus,
     *,
@@ -395,7 +339,7 @@ def detect_finding_anomalies(finding: HospitalFinding) -> list[AnomalyItem]:
 
 
 def anomalies_to_care_items(anomalies: list[AnomalyItem]) -> list:
-    """Map anomalies to CareAttentionItem dicts (imported lazily by service)."""
+    """Map anomalies to CareAttentionItem instances."""
     from app.schemas.health_snapshot import CareAttentionItem
 
     severity_to_priority = {

@@ -92,7 +92,6 @@ async def extract_lab_reports_endpoint(
             detail=str(exc),
         ) from exc
 
-    # Same body either way; fail the request when nothing persisted.
     if result.accepted == 0:
         return JSONResponse(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,

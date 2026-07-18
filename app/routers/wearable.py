@@ -12,7 +12,7 @@ from app.services.wearable_service import ingest_wearable_export, list_wearable_
 
 router = APIRouter(tags=["wearable"])
 
-# Same idea as lab report_type — add values when new device adapters exist.
+# Extend when adding new device adapters.
 SourceTypeForm = Literal["apple_health"]
 
 

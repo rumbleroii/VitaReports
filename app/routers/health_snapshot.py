@@ -56,7 +56,7 @@ def health_snapshot(
     as_of: AsOfQuery = None,
     window_hours: WindowHoursQuery = 48,
 ) -> HealthSnapshotOut:
-    """Composite health snapshot answering all care-team questions."""
+    """Return the full health snapshot for a patient."""
     try:
         return get_health_snapshot(
             db, patient_id, as_of=as_of, window_hours=window_hours
@@ -74,7 +74,7 @@ def recent_vitals(
     db: Annotated[Session, Depends(get_db)],
     as_of: AsOfQuery = None,
 ) -> RecentVitalsOut:
-    """Most recent vitals, including when and how they were captured."""
+    """Return latest vitals as of as_of."""
     try:
         return get_recent_vitals(db, patient_id, as_of=as_of)
     except ProfileNotFoundError as exc:
@@ -128,7 +128,7 @@ def hospital_findings(
     db: Annotated[Session, Depends(get_db)],
     as_of: AsOfQuery = None,
 ) -> HospitalFindingsOut:
-    """Most clinically relevant findings from hospital records."""
+    """Return hospital and lab findings as of as_of."""
     try:
         return get_hospital_findings(db, patient_id, as_of=as_of)
     except ProfileNotFoundError as exc:
@@ -145,7 +145,7 @@ def care_attention(
     as_of: AsOfQuery = None,
     window_hours: WindowHoursQuery = 48,
 ) -> CareAttentionOut:
-    """What the care team should be paying attention to right now."""
+    """Return care-attention items derived from anomaly rules."""
     try:
         return get_care_attention(
             db, patient_id, as_of=as_of, window_hours=window_hours

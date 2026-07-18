@@ -46,8 +46,7 @@ class SchemaValidatorService:
         missing_required = check(report)
         field_details = self._build_field_details(report, confidences)
 
-        # Score only fields the extractor actually found in the document
-        # (confidence > 0). Empty optional schema fields no longer dilute match %.
+        # Score only fields with confidence > 0
         scored = [d for d in field_details if (d.confidence or 0) > 0]
         if not scored:
             scored = field_details
