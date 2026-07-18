@@ -20,8 +20,6 @@ Image OCR (chest X-ray JPG) needs [Tesseract](https://github.com/tesseract-ocr/t
 uvicorn app.main:app --reload
 ```
 
-- API: http://127.0.0.1:8000
-- Docs: http://127.0.0.1:8000/docs
 - Health: http://127.0.0.1:8000/health
 
 SQLite DB is created at `data/vitarc.db` on first start.
