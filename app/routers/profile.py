@@ -34,7 +34,8 @@ def create_patient_profile(
         ) from exc
 
 
-@router.get("/profile/{patient_id}", response_model=ProfileWithEntries)
+@router.get("/profile/{patient_id}", response_model=ProfileWithEntries,    status_code=status.HTTP_200_OK
+)
 def get_patient_profile(
     patient_id: str,
     db: Annotated[Session, Depends(get_db)],

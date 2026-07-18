@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 from collections import Counter
-from datetime import date, datetime, timezone
+from datetime import date, datetime
 from typing import Any
 from uuid import uuid4
 
@@ -21,22 +21,11 @@ from app.schemas.wearable import (
     WearableObservationsOut,
 )
 from app.services.profile_service import ProfileNotFoundError
+from app.utils.datetime_utc import ensure_utc, utc_now
 
 _DEFAULT_WEARABLE_LIMIT = 200
 _MAX_WEARABLE_LIMIT = 2000
 _VALID_SOURCE_TYPES = {"apple_health"}
-
-
-def _ensure_aware(dt: datetime | None) -> datetime | None:
-    if dt is None:
-        return None
-    if dt.tzinfo is None:
-        return dt.replace(tzinfo=timezone.utc)
-    return dt.astimezone(timezone.utc)
-
-
-def _utc_now() -> datetime:
-    return datetime.now(timezone.utc)
 
 
 def _ensure_patient(db: Session, patient_id: str) -> Patient:
@@ -71,8 +60,8 @@ def observation_fingerprint(
         "patient_id": patient_id,
         "metric_type": metric_type,
         "hk_type": hk_type,
-        "start_at": _ensure_aware(start_at).isoformat(),
-        "end_at": _ensure_aware(end_at).isoformat(),
+        "start_at": ensure_utc(start_at).isoformat(),
+        "end_at": ensure_utc(end_at).isoformat(),
         "source_name": source_name or "",
         "value": value_normalized,
     }
@@ -107,8 +96,8 @@ def list_wearable_observations(
 ) -> WearableObservationsOut:
     _ensure_patient(db, patient_id)
 
-    start = _ensure_aware(start)
-    end = _ensure_aware(end)
+    start = ensure_utc(start)
+    end = ensure_utc(end)
     if start is not None and end is not None and start > end:
         raise ValueError("`start` must be <= `end`")
 
@@ -169,11 +158,11 @@ def ingest_wearable_export(
     ingested = 0
     duplicates = 0
     future_skipped = 0
-    now = _utc_now()
+    now = utc_now()
 
     for obs in parsed.observations:
-        start_at = _ensure_aware(obs.start_at)
-        end_at = _ensure_aware(obs.end_at)
+        start_at = ensure_utc(obs.start_at)
+        end_at = ensure_utc(obs.end_at)
         assert start_at is not None and end_at is not None
 
         if end_at > now:

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import re
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from typing import Any
 
 from app.schemas.health_snapshot import (
@@ -12,6 +12,7 @@ from app.schemas.health_snapshot import (
     MedicationDoseStatus,
     RecentVitalItem,
 )
+from app.utils.datetime_utc import ensure_utc
 
 _DOSE_TOKEN_RE = re.compile(
     r"\b\d+(?:\.\d+)?\s*(?:mg|mcg|g|ml|iu|units?|%|puffs?)\b",
@@ -263,10 +264,8 @@ def _delay_past_schedule(
         return None
 
     hour, minute = parsed
-    taken = last_taken_at
-    if taken.tzinfo is None:
-        taken = taken.replace(tzinfo=timezone.utc)
-    as_of_utc = as_of if as_of.tzinfo else as_of.replace(tzinfo=timezone.utc)
+    taken = ensure_utc(last_taken_at)
+    as_of_utc = ensure_utc(as_of)
 
     # Compare against scheduled slot on the same local/UTC calendar day as taken
     slot = taken.replace(hour=hour, minute=minute, second=0, microsecond=0)

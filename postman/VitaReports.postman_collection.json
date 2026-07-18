@@ -16,12 +16,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/health",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "health"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["health"],
               "query": []
             },
             "description": "Liveness check"
@@ -46,12 +42,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/create-profile",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "create-profile"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["create-profile"],
               "query": []
             },
             "description": "Run first. Uses reassignmentcheckin/patient_profile.json (VTR-00471).",
@@ -74,13 +66,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/profile/{{patientId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "profile",
-                "{{patientId}}"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["profile", "{{patientId}}"],
               "query": []
             },
             "description": "Profile plus manual entries. Run after create-profile / update-manual-entry."
@@ -105,12 +92,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/update-manual-entry",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "update-manual-entry"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["update-manual-entry"],
               "query": []
             },
             "description": "Uses reassignmentcheckin/manual_entries.json (18 entries).",
@@ -139,12 +122,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/extract-lab-reports",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "extract-lab-reports"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["extract-lab-reports"],
               "query": []
             },
             "description": "File pre-attached: C:\\Users\\mrith\\Desktop\\VitaRC Assignment\\reassignmentcheckin\\lab_cbc_kauh.pdf",
@@ -178,12 +157,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/extract-lab-reports",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "extract-lab-reports"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["extract-lab-reports"],
               "query": []
             },
             "description": "File pre-attached: C:\\Users\\mrith\\Desktop\\VitaRC Assignment\\reassignmentcheckin\\echocardiogram_fakeeh.pdf",
@@ -217,12 +192,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/extract-lab-reports",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "extract-lab-reports"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["extract-lab-reports"],
               "query": []
             },
             "description": "File pre-attached: C:\\Users\\mrith\\Desktop\\VitaRC Assignment\\reassignmentcheckin\\PHOTO-2026-05-25-18-43-01.jpg",
@@ -256,12 +227,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/extract-lab-reports",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "extract-lab-reports"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["extract-lab-reports"],
               "query": []
             },
             "description": "File pre-attached: C:\\Users\\mrith\\Desktop\\VitaRC Assignment\\reassignmentcheckin\\renal_ultrasound_sgh.pdf",
@@ -295,13 +262,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/lab-reports/{{patientId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "lab-reports",
-                "{{patientId}}"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["lab-reports", "{{patientId}}"],
               "query": []
             },
             "description": "List persisted lab/imaging reports for the patient (newest first). Run after extract-lab-reports."
@@ -315,13 +277,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/lab-reports/{{patientId}}?report_type=cbc",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "lab-reports",
-                "{{patientId}}"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["lab-reports", "{{patientId}}"],
               "query": [
                 {
                   "key": "report_type",
@@ -347,12 +304,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/ingest-wearable-export",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "ingest-wearable-export"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["ingest-wearable-export"],
               "query": []
             },
             "description": "Attach wearable_export.xml. source_type=apple_health. Append + fingerprint dedupe (re-upload skips exact samples; conflicts kept). Response includes records_duplicate / records_future_skipped.",
@@ -387,13 +340,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/wearable-observations/{{patientId}}?limit=200",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "wearable-observations",
-                "{{patientId}}"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["wearable-observations", "{{patientId}}"],
               "query": [
                 {
                   "key": "start",
@@ -431,13 +379,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/wearable-observations/{{patientId}}?metric_type=heart_rate&limit=50",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "wearable-observations",
-                "{{patientId}}"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["wearable-observations", "{{patientId}}"],
               "query": [
                 {
                   "key": "metric_type",
@@ -461,13 +404,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/wearable-observations/{{patientId}}?start=2026-04-07T00:00:00Z&end=2026-04-09T23:59:59Z&limit=200",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "wearable-observations",
-                "{{patientId}}"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["wearable-observations", "{{patientId}}"],
               "query": [
                 {
                   "key": "start",
@@ -508,13 +446,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/health-snapshot/{{patientId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "health-snapshot",
-                "{{patientId}}"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["health-snapshot", "{{patientId}}"],
               "query": []
             },
             "description": "Composite health snapshot: vitals, adherence, symptoms, findings, care attention"
@@ -545,13 +478,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/health-snapshot/{{patientId}}?as_of=2026-04-09T12:00:00Z&window_hours=48",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "health-snapshot",
-                "{{patientId}}"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["health-snapshot", "{{patientId}}"],
               "query": [
                 {
                   "key": "as_of",
@@ -587,14 +515,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/health-snapshot/{{patientId}}/recent-vitals",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "health-snapshot",
-                "{{patientId}}",
-                "recent-vitals"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["health-snapshot", "{{patientId}}", "recent-vitals"],
               "query": []
             },
             "description": "Health snapshot: recent-vitals"
@@ -622,14 +544,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/health-snapshot/{{patientId}}/medication-adherence",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "health-snapshot",
-                "{{patientId}}",
-                "medication-adherence"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["health-snapshot", "{{patientId}}", "medication-adherence"],
               "query": []
             },
             "description": "Health snapshot: medication-adherence"
@@ -657,14 +573,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/health-snapshot/{{patientId}}/symptoms",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "health-snapshot",
-                "{{patientId}}",
-                "symptoms"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["health-snapshot", "{{patientId}}", "symptoms"],
               "query": []
             },
             "description": "Health snapshot: symptoms"
@@ -691,14 +601,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/health-snapshot/{{patientId}}/hospital-findings",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "health-snapshot",
-                "{{patientId}}",
-                "hospital-findings"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["health-snapshot", "{{patientId}}", "hospital-findings"],
               "query": []
             },
             "description": "Health snapshot: hospital-findings"
@@ -726,14 +630,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/health-snapshot/{{patientId}}/care-attention",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "health-snapshot",
-                "{{patientId}}",
-                "care-attention"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["health-snapshot", "{{patientId}}", "care-attention"],
               "query": []
             },
             "description": "Health snapshot: care-attention"

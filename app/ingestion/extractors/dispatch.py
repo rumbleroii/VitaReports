@@ -1,4 +1,4 @@
-"""Dispatch extraction by report_type."""
+"""Route extraction by report_type."""
 
 from __future__ import annotations
 
@@ -11,24 +11,18 @@ from app.ingestion.extractors.radiology import extract_radiology
 from app.ingestion.extractors.ultrasound import extract_ultrasound
 from app.ingestion.parsed_document import ParsedDocument
 
-_EXTRACTORS = {
-    "cbc": extract_cbc,
-    "echo": extract_echo,
-    "chest_radiology": extract_radiology,
-    "renal_ultrasound": extract_ultrasound,
-}
-
 
 def extract(
     report_type: str, parsed: ParsedDocument
 ) -> tuple[BaseModel, dict[str, ExtractedField]]:
-    try:
-        fn = _EXTRACTORS[report_type]
-    except KeyError as exc:
-        raise ValueError(f"Unsupported report_type: {report_type}") from exc
-    return fn(parsed)
-
-
-def scored_field_names(report: BaseModel) -> list[str]:
-    """Top-level schema fields used for match-rate scoring."""
-    return list(report.model_fields.keys())
+    match report_type:
+        case "cbc":
+            return extract_cbc(parsed)
+        case "echo":
+            return extract_echo(parsed)
+        case "chest_radiology":
+            return extract_radiology(parsed)
+        case "renal_ultrasound":
+            return extract_ultrasound(parsed)
+        case _:
+            raise ValueError(f"Unsupported report_type: {report_type}")

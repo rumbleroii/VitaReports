@@ -54,7 +54,6 @@ def get_wearable_observations(
         Query(ge=1, le=2000, description="Max rows to return (newest first). Default 200."),
     ] = 200,
 ) -> WearableObservationsOut:
-    """List persisted wearable observations for a patient (newest first, capped)."""
     try:
         return list_wearable_observations(
             db,

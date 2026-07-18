@@ -9,7 +9,8 @@ from xml.etree import ElementTree as ET
 
 from dateutil import parser as date_parser
 
-from app.ingestion.adapters.manual_entry_adapter import parse_timestamp_utc
+from app.utils.datetime_utc import ensure_utc
+
 
 HK_TYPE_TO_METRIC: dict[str, str] = {
     "HKQuantityTypeIdentifierHeartRate": "heart_rate",
@@ -60,7 +61,7 @@ class AppleHealthParseResult:
 def _parse_hk_timestamp(value: str | None) -> datetime | None:
     if not value:
         return None
-    return parse_timestamp_utc(date_parser.parse(value))
+    return ensure_utc(date_parser.parse(value))
 
 
 def _metadata_from_record(elem: ET.Element) -> dict[str, Any] | None:

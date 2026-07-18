@@ -28,7 +28,6 @@ def get_lab_reports(
         Query(description="Optional filter: cbc | echo | chest_radiology | renal_ultrasound"),
     ] = None,
 ) -> LabReportsOut:
-    """List persisted lab / imaging reports for a patient (newest first)."""
     try:
         return list_lab_reports(db, patient_id, report_type=report_type)
     except ProfileNotFoundError as exc:

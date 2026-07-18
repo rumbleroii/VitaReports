@@ -1,4 +1,4 @@
-"""PDF text/table extraction via pdfplumber (no OCR)."""
+"""PDF text/table extraction via pdfplumber"""
 
 from __future__ import annotations
 

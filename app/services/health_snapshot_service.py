@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from typing import Any
 
 from sqlalchemy import select
@@ -34,6 +34,7 @@ from app.services.anomaly_rules import (
     med_name_matches_entry,
 )
 from app.services.profile_service import ProfileNotFoundError
+from app.utils.datetime_utc import ensure_utc, utc_now
 
 _DEFAULT_WINDOW_HOURS = 48
 
@@ -43,16 +44,8 @@ def _ensure_patient(db: Session, patient_id: str) -> None:
         raise ProfileNotFoundError(patient_id)
 
 
-def _aware(dt: datetime | None) -> datetime | None:
-    if dt is None:
-        return None
-    if dt.tzinfo is None:
-        return dt.replace(tzinfo=timezone.utc)
-    return dt.astimezone(timezone.utc)
-
-
 def _as_of(as_of: datetime | None) -> datetime:
-    return _aware(as_of) or datetime.now(timezone.utc)
+    return ensure_utc(as_of) or utc_now()
 
 
 def get_recent_vitals(
@@ -82,7 +75,7 @@ def get_recent_vitals(
         item = RecentVitalItem(
             type=entry_type,
             values=dict(row.values_normalized or {}),
-            captured_at=_aware(row.timestamp_utc),
+            captured_at=ensure_utc(row.timestamp_utc),
             capture_method="manual_entry",
             source_id=row.id,
             context=row.context,
@@ -107,7 +100,7 @@ def get_recent_vitals(
         item = RecentVitalItem(
             type=metric_type,
             values=dict(row.value_normalized or {}),
-            captured_at=_aware(row.end_at),
+            captured_at=ensure_utc(row.end_at),
             capture_method="device",
             source_id=row.id,
             context=row.source_name,
@@ -179,7 +172,7 @@ def get_medication_adherence(
             expected_doses_48h=expected,
             recorded_doses_48h=recorded,
             adherence=adherence,  # type: ignore[arg-type]
-            last_taken_at=_aware(matching[0].timestamp_utc) if matching else None,
+            last_taken_at=ensure_utc(matching[0].timestamp_utc) if matching else None,
         )
         status.anomalies = detect_adherence_anomalies(
             status, scheduled_time=med.scheduled_time, as_of=as_of
@@ -245,7 +238,7 @@ def get_reported_symptoms(
             ReportedSymptom(
                 symptom=str(name),
                 severity=str(severity) if severity is not None else None,
-                reported_at=_aware(entry.timestamp_utc),
+                reported_at=ensure_utc(entry.timestamp_utc),
                 source="manual_entry",
                 notes=entry.notes,
                 values=values,
@@ -256,21 +249,31 @@ def get_reported_symptoms(
 
 
 def _report_observed_at(report: LabReport, content: dict[str, Any]) -> datetime | None:
-    for key in ("test_date", "study_date", "exam_date", "report_date"):
+    # Prefer study/exam timing; include radiology fields (test_time / interpretation_time).
+    for key in (
+        "test_date",
+        "study_date",
+        "exam_date",
+        "test_time",
+        "interpretation_time",
+        "report_date",
+        "referral_date",
+        "print_datetime",
+    ):
         raw = content.get(key)
         if not raw:
             continue
         if isinstance(raw, datetime):
-            return _aware(raw)
+            return ensure_utc(raw)
         if isinstance(raw, str):
             try:
-                return _aware(datetime.fromisoformat(raw.replace("Z", "+00:00")))
+                return ensure_utc(datetime.fromisoformat(raw.replace("Z", "+00:00")))
             except ValueError:
                 try:
-                    return datetime.fromisoformat(raw[:10]).replace(tzinfo=timezone.utc)
+                    return ensure_utc(datetime.fromisoformat(raw[:10]))
                 except ValueError:
                     continue
-    return _aware(report.created_at)
+    return ensure_utc(report.created_at)
 
 
 def _extract_findings(report: LabReport) -> list[HospitalFinding]:
@@ -354,7 +357,7 @@ def get_hospital_findings(
     findings: list[HospitalFinding] = []
     for report in reports:
         for finding in _extract_findings(report):
-            observed = finding.observed_at or _aware(report.created_at)
+            observed = finding.observed_at or ensure_utc(report.created_at)
             if observed is not None and observed > as_of:
                 continue
             findings.append(finding)

@@ -79,10 +79,7 @@ def extract_lab_reports(
     report_type: str,
     files: list[tuple[str, str | None, bytes]],
 ) -> ExtractLabReportsResult:
-    """Process uploads.
 
-    ``files`` items are ``(filename, content_type, raw_bytes)``.
-    """
     patient = db.get(Patient, patient_id)
     if patient is None:
         raise ProfileNotFoundError(patient_id)
@@ -146,7 +143,7 @@ def _extract_one_file(
             parsed = parsing.parse(raw)
         else:
             parsed = ocr.ocr(raw)
-    except Exception as exc:  # noqa: BLE001 — per-file failure must not abort batch
+    except Exception as exc:
         return FileExtractionResult(
             filename=filename,
             status="rejected",
@@ -155,7 +152,7 @@ def _extract_one_file(
 
     try:
         report, confidences = extract(report_type, parsed)
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         return FileExtractionResult(
             filename=filename,
             status="rejected",

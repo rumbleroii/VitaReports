@@ -1,4 +1,4 @@
-"""Image OCR via Pillow + pytesseract (images only, never PDFs)."""
+"""Image OCR via Pillow + pytesseract (images only)."""
 
 from __future__ import annotations
 
