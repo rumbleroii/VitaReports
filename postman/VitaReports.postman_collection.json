@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "ab81a2b0-809b-4e28-bc64-7541c934b6d9",
     "name": "VitaReports",
-    "description": "All VitaReports APIs. Suggested order: create-profile \u2192 update-manual-entry \u2192 extract-lab-reports / ingest-wearable-export \u2192 GET profile \u2192 health-snapshot GETs. Select Local env (baseUrl, patientId). For multipart requests, attach files from reassignmentcheckin/.",
+    "description": "All VitaReports APIs. Suggested order: create-profile \u2192 update-manual-entry \u2192 extract-lab-reports / ingest-wearable-export \u2192 GET profile / lab-reports / wearable-observations \u2192 health-snapshot GETs. Select Local env (baseUrl, patientId). For multipart requests, attach files from reassignmentcheckin/.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -133,7 +133,8 @@
       "name": "Lab Reports",
       "item": [
         {
-          "name": "POST /extract-lab-reports (cbc) \u2014 attach lab_cbc_kauh.pdf",          "request": {
+          "name": "POST /extract-lab-reports (cbc) \u2014 attach lab_cbc_kauh.pdf",
+          "request": {
             "method": "POST",
             "header": [],
             "url": {
@@ -286,6 +287,52 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "GET /lab-reports/{patientId}",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/lab-reports/{{patientId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lab-reports",
+                "{{patientId}}"
+              ],
+              "query": []
+            },
+            "description": "List persisted lab/imaging reports for the patient (newest first). Run after extract-lab-reports."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /lab-reports/{patientId}?report_type=cbc",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/lab-reports/{{patientId}}?report_type=cbc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lab-reports",
+                "{{patientId}}"
+              ],
+              "query": [
+                {
+                  "key": "report_type",
+                  "value": "cbc",
+                  "description": "cbc | echo | chest_radiology | renal_ultrasound"
+                }
+              ]
+            },
+            "description": "Same as list, filtered to one report_type."
+          },
+          "response": []
         }
       ],
       "description": ""
@@ -324,6 +371,97 @@
                 }
               ]
             }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /wearable-observations/{patientId}",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/wearable-observations/{{patientId}}?limit=200",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wearable-observations",
+                "{{patientId}}"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "200",
+                  "description": "Max rows (default 200, max 2000)"
+                }
+              ]
+            },
+            "description": "List wearable observations (newest first, capped). Optional start/end (UTC) filter on end_at. Run after ingest-wearable-export."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /wearable-observations/{patientId}?metric_type=heart_rate",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/wearable-observations/{{patientId}}?metric_type=heart_rate&limit=50",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wearable-observations",
+                "{{patientId}}"
+              ],
+              "query": [
+                {
+                  "key": "metric_type",
+                  "value": "heart_rate",
+                  "description": "e.g. heart_rate, spo2, steps, hrv_sdnn, sleep"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            },
+            "description": "Filtered wearable list by metric_type."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /wearable-observations/{patientId}?start&end",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/wearable-observations/{{patientId}}?start=2026-04-07T00:00:00Z&end=2026-04-09T23:59:59Z&limit=200",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wearable-observations",
+                "{{patientId}}"
+              ],
+              "query": [
+                {
+                  "key": "start",
+                  "value": "2026-04-07T00:00:00Z",
+                  "description": "Inclusive lower bound on end_at (UTC)"
+                },
+                {
+                  "key": "end",
+                  "value": "2026-04-09T23:59:59Z",
+                  "description": "Inclusive upper bound on end_at (UTC)"
+                },
+                {
+                  "key": "limit",
+                  "value": "200"
+                }
+              ]
+            },
+            "description": "Wearable observations whose end_at falls between start and end (inclusive)."
           },
           "response": []
         }

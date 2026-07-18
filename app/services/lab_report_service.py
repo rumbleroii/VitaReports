@@ -13,13 +13,44 @@ from app.ingestion.file_kinds import detect_file_kind
 from app.models.lab_report import LabReport
 from app.models.patient import Patient
 from app.schemas.extraction import ExtractLabReportsResult, FileExtractionResult
-from app.schemas.lab_report import LabReportOut
+from app.schemas.lab_report import LabReportOut, LabReportsOut
 from app.services.ocr_service import OcrService
 from app.services.parsing_service import ParsingService
 from app.services.profile_service import ProfileNotFoundError
 from app.services.schema_validator_service import SchemaValidatorService
 
 _VALID_REPORT_TYPES = {"cbc", "echo", "chest_radiology", "renal_ultrasound"}
+
+
+def _lab_report_to_out(model: LabReport) -> LabReportOut:
+    return LabReportOut(
+        id=model.id,
+        patient_id=model.patient_id,
+        report_type=model.report_type,
+        content=model.content,
+        created_at=model.created_at,
+    )
+
+
+def list_lab_reports(
+    db: Session,
+    patient_id: str,
+    *,
+    report_type: str | None = None,
+) -> LabReportsOut:
+    patient = db.get(Patient, patient_id)
+    if patient is None:
+        raise ProfileNotFoundError(patient_id)
+
+    query = db.query(LabReport).filter(LabReport.patient_id == patient_id)
+    if report_type is not None:
+        if report_type not in _VALID_REPORT_TYPES:
+            raise ValueError(f"Unsupported report_type: {report_type}")
+        query = query.filter(LabReport.report_type == report_type)
+
+    rows = query.order_by(LabReport.created_at.desc()).all()
+    reports = [_lab_report_to_out(row) for row in rows]
+    return LabReportsOut(patient_id=patient_id, count=len(reports), reports=reports)
 
 
 def _persist_lab_report(
@@ -38,13 +69,7 @@ def _persist_lab_report(
     db.add(model)
     db.commit()
     db.refresh(model)
-    return LabReportOut(
-        id=model.id,
-        patient_id=model.patient_id,
-        report_type=model.report_type,
-        content=model.content,
-        created_at=model.created_at,
-    )
+    return _lab_report_to_out(model)
 
 
 def extract_lab_reports(

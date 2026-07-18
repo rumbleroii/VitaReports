@@ -161,7 +161,9 @@ Import `postman/VitaReports.postman_collection.json` and `postman/Local.postman_
 | GET | `/profile/{patient_id}` | Profile + manual entries |
 | POST | `/update-manual-entry` | Upsert manual entries |
 | POST | `/extract-lab-reports` | Parse/persist hospital documents |
+| GET | `/lab-reports/{patient_id}` | List persisted lab/imaging reports |
 | POST | `/ingest-wearable-export` | Parse/persist Apple Health XML |
+| GET | `/wearable-observations/{patient_id}` | List wearable observations (`start`/`end`/`metric_type`/`limit`) |
 | GET | `/health-snapshot/{patient_id}` | Composite snapshot + anomalies |
 | GET | `/health-snapshot/{patient_id}/…` | Section endpoints |
 

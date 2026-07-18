@@ -36,3 +36,13 @@ class WearableIngestResult(BaseModel):
     me: WearableMeOut = Field(default_factory=WearableMeOut)
     profile_match: bool = False
     profile_date_of_birth: date | None = None
+
+
+class WearableObservationsOut(BaseModel):
+    patient_id: str
+    count: int
+    limit: int
+    metric_type: str | None = None
+    start: datetime | None = None
+    end: datetime | None = None
+    observations: list[WearableObservationOut] = Field(default_factory=list)
